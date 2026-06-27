@@ -1,0 +1,16 @@
+.heatmap {
+  display: grid;
+  grid-template-columns: repeat(13, 1fr);
+  gap: 3px;
+}
+
+.heatmap__cell {
+  aspect-ratio: 1;
+  border-radius: 2px;
+}
+
+.heat-0 { background: #1e1e2e; border: 1px solid #313244; }
+.heat-1 { background: #1a3a4a; }
+.heat-2 { background: #1d6b8a; }
+.heat-3 { background: #45b0d8; }
+.heat-4 { background: #89dceb; }

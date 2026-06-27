@@ -1,0 +1,128 @@
+.dashboard {
+  padding: 24px 32px;
+  color: #cdd6f4;
+  overflow-y: auto;
+  height: 100%;
+}
+
+.dashboard__title {
+  font-size: 1.6rem;
+  font-weight: 700;
+  margin-bottom: 20px;
+  color: #cba6f7;
+}
+
+.dashboard__stats {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 28px;
+}
+
+.stat-card {
+  background: #181825;
+  border: 1px solid #313244;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 130px;
+  padding: 16px 20px;
+}
+
+.stat-card__value {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: #89b4fa;
+}
+
+.stat-card__label {
+  color: #6c7086;
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.dashboard__section {
+  background: #181825;
+  border: 1px solid #313244;
+  border-radius: 10px;
+  margin-bottom: 20px;
+  padding: 16px 20px;
+}
+
+.dashboard__section h2 {
+  color: #a6adc8;
+  font-size: 0.82rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  margin-bottom: 12px;
+  text-transform: uppercase;
+}
+
+.dashboard__columns {
+  display: grid;
+  gap: 20px;
+  grid-template-columns: 1fr 1fr;
+}
+
+.dashboard__empty {
+  color: #45475a;
+  font-size: 0.875rem;
+}
+
+/* Tag cloud */
+.tag-cloud {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.tag-cloud__tag {
+  background: #313244;
+  border-radius: 20px;
+  color: #cba6f7;
+  cursor: default;
+  padding: 3px 10px;
+  transition: background 0.15s;
+}
+
+.tag-cloud__tag sup {
+  color: #585b70;
+  font-size: 0.6em;
+  margin-left: 3px;
+}
+
+/* Recent list */
+.recent-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.recent-list__item {
+  align-items: center;
+  border-radius: 6px;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  padding: 6px 8px;
+  transition: background 0.1s;
+}
+
+.recent-list__item:hover {
+  background: #313244;
+}
+
+.recent-list__title {
+  font-size: 0.875rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.recent-list__date {
+  color: #6c7086;
+  flex-shrink: 0;
+  font-size: 0.75rem;
+  margin-left: 12px;
+}
