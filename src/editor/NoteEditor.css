@@ -1,0 +1,136 @@
+.note-editor {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  background: #1e1e2e;
+  color: #cdd6f4;
+}
+
+.note-editor__header {
+  padding: 16px 20px 12px;
+  border-bottom: 1px solid #313244;
+  flex-shrink: 0;
+}
+
+.note-editor__title {
+  width: 100%;
+  background: transparent;
+  border: none;
+  color: #cdd6f4;
+  font-size: 1.5rem;
+  font-weight: 600;
+  outline: none;
+  margin-bottom: 8px;
+}
+
+.note-editor__title::placeholder {
+  color: #585b70;
+}
+
+.note-editor__meta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.note-editor__tags {
+  flex: 1;
+  background: #181825;
+  border: 1px solid #313244;
+  border-radius: 6px;
+  color: #a6adc8;
+  font-size: 0.8rem;
+  padding: 4px 10px;
+  outline: none;
+}
+
+.note-editor__tags::placeholder {
+  color: #45475a;
+}
+
+.note-editor__preview-btn {
+  background: #313244;
+  border: none;
+  border-radius: 6px;
+  color: #cdd6f4;
+  cursor: pointer;
+  font-size: 0.8rem;
+  padding: 4px 12px;
+  transition: background 0.15s;
+}
+
+.note-editor__preview-btn:hover,
+.note-editor__preview-btn.active {
+  background: #89b4fa;
+  color: #1e1e2e;
+}
+
+.note-editor__saving {
+  color: #a6adc8;
+  font-size: 0.75rem;
+}
+
+.note-editor__body {
+  flex: 1;
+  overflow: hidden;
+}
+
+/* ── Markdown preview styles ──────────────────────────────────────────────── */
+
+.markdown-preview {
+  padding: 20px 24px;
+  color: #cdd6f4;
+  font-size: 15px;
+  line-height: 1.7;
+  overflow-y: auto;
+  height: 100%;
+}
+
+.markdown-preview h1,
+.markdown-preview h2,
+.markdown-preview h3,
+.markdown-preview h4,
+.markdown-preview h5,
+.markdown-preview h6 {
+  color: #cba6f7;
+  margin: 1.2em 0 0.4em;
+}
+
+.markdown-preview h1 { font-size: 1.8rem; }
+.markdown-preview h2 { font-size: 1.4rem; }
+.markdown-preview h3 { font-size: 1.2rem; }
+
+.markdown-preview p { margin: 0.6em 0; }
+.markdown-preview strong { color: #f38ba8; }
+.markdown-preview em { color: #fab387; }
+
+.markdown-preview code {
+  background: #313244;
+  border-radius: 4px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.85em;
+  padding: 2px 6px;
+}
+
+.markdown-preview blockquote {
+  border-left: 3px solid #89b4fa;
+  color: #a6adc8;
+  margin: 0.8em 0;
+  padding: 4px 16px;
+}
+
+.markdown-preview a {
+  color: #89b4fa;
+}
+
+.markdown-preview li {
+  margin: 0.2em 0;
+  margin-left: 1.2em;
+  list-style: disc;
+}
+
+.markdown-preview hr {
+  border: none;
+  border-top: 1px solid #313244;
+  margin: 1.5em 0;
+}
