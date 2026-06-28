@@ -1,14 +1,25 @@
 import { useMemo } from 'react';
+import type { Note } from '../storage/types';
 
 interface Props {
   content: string;
+  notes?: Note[];
+  onSelectNote?: (id: string) => void;
 }
 
-// Minimal markdown renderer — renders the most common constructs without
-// pulling in a heavy parser. Replace with remark/rehype if you need tables,
-// footnotes, or custom directives later.
-function renderMarkdown(md: string): string {
+function renderMarkdown(md: string, notes?: Note[]): string {
   return md
+    // [[note-links]] FIRST — before paragraph wrapping
+    .replace(/\[\[(.+?)\]\]/g, (_m, raw: string) => {
+      const title = raw.trim();
+      const found = notes?.find(
+        (n) => n.title.toLowerCase() === title.toLowerCase(),
+      );
+      if (found) {
+        return `<span class="note-link" data-noteid="${found.id}">${title}</span>`;
+      }
+      return `<span class="note-link note-link--broken">${title}</span>`;
+    })
     // headings
     .replace(/^#{6}\s(.+)$/gm, '<h6>$1</h6>')
     .replace(/^#{5}\s(.+)$/gm, '<h5>$1</h5>')
@@ -32,24 +43,32 @@ function renderMarkdown(md: string): string {
     // horizontal rule
     .replace(/^---$/gm, '<hr />')
     // links
-    .replace(/\[(.+?)\]\((.+?)\)/g, '<a href="$2" target="_blank" rel="noopener noreferrer">$1</a>')
-    // line breaks → paragraphs (double newline)
+    .replace(
+      /\[(.+?)\]\((.+?)\)/g,
+      '<a href="$2" target="_blank" rel="noopener noreferrer">$1</a>',
+    )
+    // paragraphs
     .replace(/\n\n/g, '</p><p>')
     .replace(/^(?!<[houlbp])(.+)$/gm, '$1')
-    // wrap in paragraphs
     .replace(/^(.+)$/gm, (line) =>
       /^<[houlbphi]|^$/.test(line.trim()) ? line : `<p>${line}</p>`,
     )
     .trim();
 }
 
-export function MarkdownPreview({ content }: Props) {
-  const html = useMemo(() => renderMarkdown(content), [content]);
+export function MarkdownPreview({ content, notes, onSelectNote }: Props) {
+  const html = useMemo(() => renderMarkdown(content, notes), [content, notes]);
+
+  function handleClick(e: React.MouseEvent<HTMLDivElement>) {
+    const target = e.target as HTMLElement;
+    const noteId = target.dataset.noteid;
+    if (noteId && onSelectNote) onSelectNote(noteId);
+  }
 
   return (
     <div
       className="markdown-preview"
-      // Content comes from the user's own notes — no external input.
+      onClick={onSelectNote ? handleClick : undefined}
       // eslint-disable-next-line react/no-danger
       dangerouslySetInnerHTML={{ __html: html }}
     />
