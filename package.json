@@ -17,6 +17,7 @@
     "@codemirror/state": "^6.5.2",
     "@codemirror/theme-one-dark": "^6.1.2",
     "@codemirror/view": "^6.36.4",
+    "@fontsource-variable/dm-sans": "^5.2.8",
     "@tauri-apps/api": "^2",
     "@tauri-apps/plugin-opener": "^2",
     "@uiw/react-codemirror": "^4.23.10",

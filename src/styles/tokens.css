@@ -1,0 +1,111 @@
+/* ─────────────────────────────────────────────────────────────────────────
+   Wickerly design tokens
+   All CSS values in component files must reference these variables.
+   Never hard-code a colour, radius, or spacing value elsewhere.
+───────────────────────────────────────────────────────────────────────── */
+
+:root {
+  /* ── Typography ─────────────────────────────────────────────────────── */
+  --font-ui:   'DM Sans Variable', 'DM Sans', system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', 'Fira Code', ui-monospace, monospace;
+
+  /* ── Scale ──────────────────────────────────────────────────────────── */
+  --text-xs:   0.68rem;   /* 10.2 px — section labels, counters */
+  --text-sm:   0.78rem;   /* 11.7 px — metadata, dates, chips */
+  --text-base: 0.875rem;  /* 13.1 px — list items, body copy */
+  --text-md:   1rem;      /* 15 px   — default */
+  --text-lg:   1.2rem;    /* 18 px   — editor title area */
+  --text-xl:   1.55rem;   /* 23 px   — note title input */
+
+  /* ── Spacing (4-px grid) ─────────────────────────────────────────────── */
+  --sp-1: 4px;
+  --sp-2: 8px;
+  --sp-3: 12px;
+  --sp-4: 16px;
+  --sp-5: 20px;
+  --sp-6: 24px;
+  --sp-8: 32px;
+
+  /* ── Radius ─────────────────────────────────────────────────────────── */
+  --radius-sm: 5px;
+  --radius:    8px;
+  --radius-lg: 10px;
+  --radius-xl: 14px;
+
+  /* ── Motion ─────────────────────────────────────────────────────────── */
+  --ease: 180ms ease;
+
+  /* ══════════════════════════════════════════════════════════════════════
+     LIGHT MODE (default)
+  ══════════════════════════════════════════════════════════════════════ */
+
+  /* Surfaces */
+  --bg:             #EEE8DC;   /* main background — warm sand */
+  --surface:        #E5DED0;   /* sidebar, left panel — one step darker */
+  --surface-raised: #F4EFE6;   /* hover / elevated card */
+  --border:         #CFC5B2;   /* column dividers */
+  --border-faint:   #DDD8CC;   /* intra-panel dividers */
+
+  /* Text */
+  --text:           #1C1610;   /* primary — deep warm brown-black */
+  --text-2:         #5A4E3E;   /* secondary — folder names, labels */
+  --text-muted:     #907C6A;   /* muted — dates, counters, metadata */
+  --text-ghost:     #BCA898;   /* placeholder */
+
+  /* Accent — moss green */
+  --accent:         #4A7C64;
+  --accent-hover:   #3D6A54;
+  --accent-bg:      #D6E9DF;   /* tinted surface for active states */
+  --accent-text:    #FFFFFF;   /* text on filled accent button */
+
+  /* Warm — terracotta */
+  --warm:           #B26A44;
+  --warm-hover:     #9A5A38;
+  --warm-bg:        #EED9CC;   /* tinted surface */
+
+  /* Scrollbar (webkit) */
+  --scrollbar-thumb: #C5BAA8;
+  --scrollbar-track: transparent;
+}
+
+/* ══════════════════════════════════════════════════════════════════════
+   DARK MODE
+══════════════════════════════════════════════════════════════════════ */
+[data-theme="dark"] {
+  /* Surfaces */
+  --bg:             #1A1410;   /* deep warm brown-black */
+  --surface:        #221B14;   /* sidebar, left panel */
+  --surface-raised: #2C2318;   /* hover / elevated */
+  --border:         #3A2E1E;   /* column dividers */
+  --border-faint:   #2A2218;   /* intra-panel dividers */
+
+  /* Text */
+  --text:           #EDE6D2;   /* light warm */
+  --text-2:         #A89880;   /* secondary */
+  --text-muted:     #786858;   /* muted */
+  --text-ghost:     #4E4236;   /* placeholder */
+
+  /* Accent — slightly brighter moss green for contrast */
+  --accent:         #5EA07E;
+  --accent-hover:   #6FB38E;
+  --accent-bg:      #193326;
+  --accent-text:    #0D1F18;
+
+  /* Warm — terracotta lightened for dark bg */
+  --warm:           #C47E58;
+  --warm-hover:     #D48E68;
+  --warm-bg:        #3A1E0E;
+
+  /* Scrollbar */
+  --scrollbar-thumb: #3E3228;
+  --scrollbar-track: transparent;
+}
+
+/* ── Global scrollbar styling ─────────────────────────────────────────── */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);
+}
+::-webkit-scrollbar       { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: var(--scrollbar-track); }
+::-webkit-scrollbar-thumb { background: var(--scrollbar-thumb); border-radius: 99px; }
