@@ -118,9 +118,21 @@ Als peer-A `['draft']` heeft en peer-B `['draft', 'important']` heeft met een la
 
 ### 4c. Geen tombstones voor verwijderde notities
 
-Er is nog geen mechanisme om aan andere peers te communiceren "ik heb deze notitie verwijderd". Als peer-A een notitie verwijdert en peer-B deze later synchrooniseert, komt de notitie terug.
+Er is nog geen mechanisme om aan andere peers te communiceren "ik heb deze notitie verwijderd". Als peer-A een notitie verwijdert, worden zowel de `Note` als het `LWWDoc` uit de lokale Dexie-database verwijderd — er wordt geen spoor van de verwijdering bewaard.
 
-**Oplossing later:** Een verwijderd document bijhouden als `{ archived: true }` (al aanwezig als veld) of een aparte tombstone-registry implementeren.
+**Concreet gedrag bij delete-vs-concurrent-edit conflict:**
+
+| Scenario | Wat er gebeurt |
+|---|---|
+| A verwijdert notitie, B bewerkt daarna | B pusht zijn `LWWDoc` naar A. A heeft geen lokaal doc → `applyRemoteDoc` neemt de remote versie als-is over → notitie wordt **herschapen op A** met B's inhoud. |
+| B verwijdert notitie, A bewerkt daarna | A pusht naar B. B heeft geen lokaal doc → zelfde resultaat: notitie wordt **herschapen op B** met A's inhoud. |
+| A verwijdert notitie terwijl B offline is | B synchroniseert zodra hij online komt, pusht zijn versie → notitie wordt herschapen op A. |
+
+In alle gevallen wint de *aanwezigheid* van een `LWWDoc` van een verwijdering. Verwijderen is in de huidige versie dus **geen definitieve operatie** zolang een andere peer de notitie nog heeft.
+
+**Waarom dit acceptabel is voor nu:** In een single-user, multi-device context (de beoogde gebruiker van Fase 2) zie je dit gedrag alleen als je een notitie verwijdert op apparaat A terwijl apparaat B offline is en die notitie nog heeft. In de praktijk is dit zeldzaam.
+
+**Oplossing later:** Een tombstone-register bijhouden: bij `deleteNote` schrijf `{ id, deletedAt: LWWTimestamp }` naar een aparte `tombstones`-tabel. Voeg tombstones mee in de CRDT-doc uitwisseling. In `applyRemoteDoc` check je eerst of er een tombstone bestaat met een hogere timestamp dan het inkomende doc — zo ja, negeer het doc (of verwijder het lokaal). Dit vergt een extra tabel en een merge-stap, maar past volledig binnen de bestaande state-based architectuur.
 
 ### 4d. Geen peer-identiteit of sleutelbeheer
 
