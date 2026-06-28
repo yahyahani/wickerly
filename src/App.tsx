@@ -1,4 +1,5 @@
 import { useState, useMemo, useEffect, useCallback } from 'react';
+import { FilePlus, Search } from 'lucide-react';
 import { StorageProvider } from './storage/StorageContext';
 import { useNotes } from './hooks/useNotes';
 import { useFolders } from './hooks/useFolders';
@@ -108,14 +109,18 @@ function AppInner() {
           <div className="left-panel">
             <div className="panel-toolbar">
               <button className="panel-new-btn" onClick={() => handleCreateNote()}>
-                + New note
+                <FilePlus size={14} strokeWidth={1.8} />
+                New note
               </button>
-              <input
-                className="panel-search"
-                placeholder="Search…"
-                value={query}
-                onChange={(e) => search(e.target.value)}
-              />
+              <div className="panel-search-wrap">
+                <Search size={13} strokeWidth={1.7} className="panel-search-icon" />
+                <input
+                  className="panel-search"
+                  placeholder="Search…"
+                  value={query}
+                  onChange={(e) => search(e.target.value)}
+                />
+              </div>
             </div>
 
             <FolderTree
@@ -157,7 +162,8 @@ function AppInner() {
               <div className="app__empty">
                 <p>Select a note or create a new one</p>
                 <button className="app__empty-btn" onClick={() => handleCreateNote()}>
-                  + New note
+                  <FilePlus size={14} strokeWidth={1.8} style={{ marginRight: 6, verticalAlign: 'middle' }} />
+                  New note
                 </button>
               </div>
             )}

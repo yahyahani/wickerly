@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef, useMemo } from 'react';
+import { FilePlus, FileText, LayoutDashboard, Search } from 'lucide-react';
 import type { Note } from '../storage/types';
 import './CommandPalette.css';
 
@@ -7,7 +8,6 @@ type View = 'notes' | 'dashboard';
 interface Action {
   kind: 'action';
   id: string;
-  icon: string;
   label: string;
   description: string;
 }
@@ -28,10 +28,17 @@ interface Props {
 }
 
 const STATIC_ACTIONS: Action[] = [
-  { kind: 'action', id: 'new-note',   icon: '📝', label: 'New note',          description: 'Create a new empty note' },
-  { kind: 'action', id: 'notes',      icon: '✏️',  label: 'Go to Notes',       description: 'Switch to the notes view' },
-  { kind: 'action', id: 'dashboard',  icon: '📊', label: 'Go to Dashboard',   description: 'Switch to the dashboard view' },
+  { kind: 'action', id: 'new-note',   label: 'New note',          description: 'Create a new empty note' },
+  { kind: 'action', id: 'notes',      label: 'Go to Notes',       description: 'Switch to the notes view' },
+  { kind: 'action', id: 'dashboard',  label: 'Go to Dashboard',   description: 'Switch to the dashboard view' },
 ];
+
+function ActionIcon({ id }: { id: string }) {
+  if (id === 'new-note')  return <FilePlus size={15} strokeWidth={1.7} />;
+  if (id === 'notes')     return <FileText size={15} strokeWidth={1.7} />;
+  if (id === 'dashboard') return <LayoutDashboard size={15} strokeWidth={1.7} />;
+  return null;
+}
 
 function scoreMatch(label: string, query: string): number {
   const l = label.toLowerCase();
@@ -109,7 +116,7 @@ export function CommandPalette({ notes, onClose, onSelectNote, onNewNote, onView
     <div className="palette-backdrop" onClick={onClose}>
       <div className="palette" onClick={(e) => e.stopPropagation()} onKeyDown={handleKeyDown}>
         <div className="palette__input-wrap">
-          <span className="palette__icon">⌘</span>
+          <Search size={15} strokeWidth={1.7} className="palette__icon" />
           <input
             ref={inputRef}
             className="palette__input"
@@ -133,7 +140,7 @@ export function CommandPalette({ notes, onClose, onSelectNote, onNewNote, onView
                   onClick={() => selectItem(item)}
                   onMouseEnter={() => setIndex(i)}
                 >
-                  <span className="palette__item-icon">{item.icon}</span>
+                  <span className="palette__item-icon"><ActionIcon id={item.id} /></span>
                   <span className="palette__item-label">{item.label}</span>
                   <span className="palette__item-description">{item.description}</span>
                 </li>
@@ -146,7 +153,7 @@ export function CommandPalette({ notes, onClose, onSelectNote, onNewNote, onView
                 onClick={() => selectItem(item)}
                 onMouseEnter={() => setIndex(i)}
               >
-                <span className="palette__item-icon">📄</span>
+                <span className="palette__item-icon"><FileText size={14} strokeWidth={1.6} /></span>
                 <span className="palette__item-label">{item.note.title || 'Untitled'}</span>
                 {item.note.tags.length > 0 && (
                   <span className="palette__item-tags">

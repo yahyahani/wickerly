@@ -1,4 +1,14 @@
 import { useState, useRef } from 'react';
+import {
+  ChevronRight,
+  Folder as FolderIcon,
+  FolderOpen,
+  Library,
+  FilePlus,
+  FolderPlus,
+  Pencil,
+  Trash2,
+} from 'lucide-react';
 import type { Folder, Note, FolderCreateInput, FolderUpdateInput } from '../storage/types';
 import './FolderTree.css';
 
@@ -100,9 +110,17 @@ export function FolderTree({
             onClick={(e) => toggleExpand(node.id, e)}
             style={{ visibility: hasChildren ? 'visible' : 'hidden' }}
           >
-            {isExpanded ? '▾' : '▸'}
+            <ChevronRight
+              size={11}
+              strokeWidth={2.2}
+              style={{ transform: isExpanded ? 'rotate(90deg)' : 'none', transition: 'transform 150ms ease' }}
+            />
           </button>
-          <span className="folder-node__icon">📁</span>
+          <span className="folder-node__icon">
+            {isExpanded && hasChildren
+              ? <FolderOpen size={13} strokeWidth={1.6} />
+              : <FolderIcon size={13} strokeWidth={1.6} />}
+          </span>
           {isEditing ? (
             <input
               ref={editRef}
@@ -124,10 +142,18 @@ export function FolderTree({
           )}
           <span className="folder-node__count">{node.noteCount}</span>
           <span className="folder-node__actions">
-            <button title="New note here" onClick={(e) => { e.stopPropagation(); onCreateNoteInFolder(node.id); }}>+</button>
-            <button title="New subfolder" onClick={(e) => handleCreateFolder(node.id, e)}>📁</button>
-            <button title="Rename (or double-click)" onClick={(e) => startEdit(node, e)}>✎</button>
-            <button title="Delete folder" onClick={(e) => handleDelete(node.id, node.name, e)}>×</button>
+            <button title="New note here" onClick={(e) => { e.stopPropagation(); onCreateNoteInFolder(node.id); }}>
+              <FilePlus size={12} strokeWidth={1.8} />
+            </button>
+            <button title="New subfolder" onClick={(e) => handleCreateFolder(node.id, e)}>
+              <FolderPlus size={12} strokeWidth={1.8} />
+            </button>
+            <button title="Rename" onClick={(e) => startEdit(node, e)}>
+              <Pencil size={11} strokeWidth={1.8} />
+            </button>
+            <button title="Delete folder" className="folder-node__action-delete" onClick={(e) => handleDelete(node.id, node.name, e)}>
+              <Trash2 size={11} strokeWidth={1.8} />
+            </button>
           </span>
         </div>
         {isExpanded && node.children.map((child) => renderNode(child, depth + 1))}
@@ -140,7 +166,7 @@ export function FolderTree({
       <div className="folder-tree__header">
         <span className="folder-tree__title">Folders</span>
         <button className="folder-tree__add" title="New folder" onClick={(e) => handleCreateFolder(null, e)}>
-          + folder
+          <FolderPlus size={13} strokeWidth={1.8} />
         </button>
       </div>
 
@@ -150,8 +176,12 @@ export function FolderTree({
         style={{ paddingLeft: '8px' }}
         onClick={() => onSelectFolder(null)}
       >
-        <span className="folder-node__chevron" style={{ visibility: 'hidden' }}>▸</span>
-        <span className="folder-node__icon">📝</span>
+        <span className="folder-node__chevron" style={{ visibility: 'hidden' }}>
+          <ChevronRight size={11} strokeWidth={2.2} />
+        </span>
+        <span className="folder-node__icon">
+          <Library size={13} strokeWidth={1.6} />
+        </span>
         <span className="folder-node__name">All notes</span>
         <span className="folder-node__count">{notes.length}</span>
       </div>

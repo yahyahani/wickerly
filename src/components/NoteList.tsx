@@ -1,4 +1,5 @@
 import { format } from 'date-fns';
+import { Folder as FolderIcon, Tag, Trash2 } from 'lucide-react';
 import type { Note, Folder } from '../storage/types';
 import './NoteList.css';
 
@@ -29,10 +30,14 @@ export function NoteList({ notes, folders, activeNoteId, onSelectNote, onDeleteN
             <span className="note-list__item-date">{format(note.updatedAt, 'd MMM')}</span>
           </div>
           {note.folderId && (
-            <span className="note-list__item-folder">📁 {folderMap.get(note.folderId) ?? '—'}</span>
+            <span className="note-list__item-folder">
+              <FolderIcon size={10} strokeWidth={1.8} style={{ marginRight: 3, verticalAlign: 'middle' }} />
+              {folderMap.get(note.folderId) ?? '—'}
+            </span>
           )}
           {note.tags.length > 0 && (
             <div className="note-list__item-tags">
+              <Tag size={10} strokeWidth={1.8} className="note-list__tag-icon" />
               {note.tags.slice(0, 4).map((t) => (
                 <span key={t} className="note-list__tag">{t}</span>
               ))}
@@ -46,7 +51,7 @@ export function NoteList({ notes, folders, activeNoteId, onSelectNote, onDeleteN
             }}
             title="Delete note"
           >
-            ×
+            <Trash2 size={12} strokeWidth={1.8} />
           </button>
         </li>
       ))}
