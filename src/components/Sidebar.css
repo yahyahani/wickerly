@@ -84,3 +84,27 @@
 }
 
 .sidebar__spacer { flex: 1; }
+
+.sidebar__sync {
+  align-items: center;
+  cursor: default;
+  display: flex;
+  height: 36px;
+  justify-content: center;
+  width: 36px;
+}
+
+.sidebar__sync-dot {
+  background: var(--text-muted);
+  border-radius: 50%;
+  height: 7px;
+  opacity: 0.35;
+  transition: background var(--ease), box-shadow var(--ease), opacity var(--ease);
+  width: 7px;
+}
+
+.sidebar__sync-dot.connected {
+  background: #4caf7d;
+  box-shadow: 0 0 6px rgba(76, 175, 125, 0.55);
+  opacity: 1;
+}

@@ -29,7 +29,7 @@ function AppInner() {
   const { notes, loading: notesLoading, createNote, updateNote, deleteNote, refresh } = useNotes();
   const { folders, loading: foldersLoading, createFolder, updateFolder, deleteFolder } = useFolders();
   const { query, results, search } = useSearch(notes);
-  const { notifySync } = useSyncManager(refresh);
+  const { notifySync, syncStatus } = useSyncManager(refresh);
 
   const [activeView, setActiveView]         = useState<View>('notes');
   const [activeNoteId, setActiveNoteId]     = useState<string | null>(null);
@@ -208,7 +208,7 @@ function AppInner() {
 
   return (
     <div className="app">
-      <Sidebar activeView={activeView} onViewChange={setActiveView} onOpenPalette={() => setPaletteOpen(true)} />
+      <Sidebar activeView={activeView} onViewChange={setActiveView} onOpenPalette={() => setPaletteOpen(true)} syncStatus={syncStatus} />
 
       {activeView === 'notes' && (
         <>

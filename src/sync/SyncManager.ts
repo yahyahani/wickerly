@@ -11,7 +11,9 @@ export class SyncManager {
   private intervalId: ReturnType<typeof setInterval> | null = null;
   private unlistenIncoming: (() => void) | null = null;
   private running = false;
-  private syncing = false; // prevents overlapping sync rounds
+  private syncing = false;
+  private lastPeerCount = 0;
+  private lastSyncAt: number | null = null;
 
   constructor(adapter: StorageAdapter, transport: SyncTransport) {
     this.adapter = adapter;
@@ -60,11 +62,16 @@ export class SyncManager {
 
   // ── private ─────────────────────────────────────────────────────────────────
 
+  getStatus(): { peerCount: number; lastSyncAt: number | null } {
+    return { peerCount: this.lastPeerCount, lastSyncAt: this.lastSyncAt };
+  }
+
   private async applyIncoming(incoming: unknown[]): Promise<void> {
     for (const raw of incoming) {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       await this.adapter.applyRemoteDoc(raw as any);
     }
+    this.lastSyncAt = Date.now();
     await this.onSync?.();
   }
 
@@ -73,10 +80,9 @@ export class SyncManager {
     this.syncing = true;
     try {
       const peers = await this.transport.getPeers();
+      this.lastPeerCount = peers.length;
       for (const peer of peers) {
-        await this.syncWithPeer(peer).catch(() => {
-          // Peer offline or unreachable — skip silently
-        });
+        await this.syncWithPeer(peer).catch(() => {});
       }
     } catch {
       // Discovery failure — ignore
@@ -96,6 +102,7 @@ export class SyncManager {
 
     const ourDocs = await this.adapter.getAllCRDTDocs();
     await this.transport.pushToPeer(peer.base_url, ourDocs);
+    this.lastSyncAt = Date.now();
 
     if (changed) await this.onSync?.();
   }

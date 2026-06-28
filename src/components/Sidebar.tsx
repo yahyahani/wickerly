@@ -6,6 +6,7 @@ import {
   Command,
 } from 'lucide-react';
 import { useTheme } from '../hooks/useTheme';
+import type { SyncStatus } from '../sync/useSyncManager';
 import './Sidebar.css';
 
 type View = 'notes' | 'dashboard';
@@ -14,9 +15,19 @@ interface Props {
   activeView: View;
   onViewChange: (v: View) => void;
   onOpenPalette: () => void;
+  syncStatus?: SyncStatus;
 }
 
-export function Sidebar({ activeView, onViewChange, onOpenPalette }: Props) {
+function syncTooltip(s: SyncStatus): string {
+  if (!s.available) return 'Sync not available';
+  const peers = s.peerCount === 1 ? '1 peer' : `${s.peerCount} peers`;
+  const time = s.lastSyncAt
+    ? `· synced ${new Date(s.lastSyncAt).toLocaleTimeString()}`
+    : '· not yet synced';
+  return s.peerCount === 0 ? 'Searching for peers…' : `${peers} ${time}`;
+}
+
+export function Sidebar({ activeView, onViewChange, onOpenPalette, syncStatus }: Props) {
   const { theme, toggle } = useTheme();
 
   return (
@@ -40,6 +51,12 @@ export function Sidebar({ activeView, onViewChange, onOpenPalette }: Props) {
       </button>
 
       <div className="sidebar__spacer" />
+
+      {syncStatus?.available && (
+        <div className="sidebar__sync" title={syncTooltip(syncStatus)}>
+          <span className={`sidebar__sync-dot${syncStatus.peerCount > 0 ? ' connected' : ''}`} />
+        </div>
+      )}
 
       <button
         className="sidebar__btn"
