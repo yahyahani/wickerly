@@ -33,21 +33,6 @@
   gap: 8px;
 }
 
-.note-editor__tags {
-  flex: 1;
-  background: #181825;
-  border: 1px solid #313244;
-  border-radius: 6px;
-  color: #a6adc8;
-  font-size: 0.8rem;
-  padding: 4px 10px;
-  outline: none;
-}
-
-.note-editor__tags::placeholder {
-  color: #45475a;
-}
-
 .note-editor__preview-btn {
   background: #313244;
   border: none;

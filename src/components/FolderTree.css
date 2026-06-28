@@ -1,0 +1,132 @@
+.folder-tree {
+  border-bottom: 1px solid #313244;
+  flex-shrink: 0;
+  padding-bottom: 4px;
+}
+
+.folder-tree__header {
+  align-items: center;
+  display: flex;
+  justify-content: space-between;
+  padding: 8px 12px 4px;
+}
+
+.folder-tree__title {
+  color: #6c7086;
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.folder-tree__add {
+  background: none;
+  border: none;
+  color: #585b70;
+  cursor: pointer;
+  font-size: 0.72rem;
+  padding: 2px 6px;
+  border-radius: 4px;
+  transition: color 0.15s, background 0.15s;
+}
+
+.folder-tree__add:hover {
+  background: #313244;
+  color: #cdd6f4;
+}
+
+/* ── Individual folder node ─────────────────────────────────────────────── */
+
+.folder-node {
+  align-items: center;
+  border-radius: 6px;
+  cursor: pointer;
+  display: flex;
+  gap: 4px;
+  margin: 1px 4px;
+  padding: 5px 8px;
+  position: relative;
+  transition: background 0.1s;
+  user-select: none;
+}
+
+.folder-node:hover {
+  background: #1e1e2e;
+}
+
+.folder-node.active {
+  background: #2a2b3d;
+}
+
+.folder-node__chevron {
+  background: none;
+  border: none;
+  color: #585b70;
+  cursor: pointer;
+  font-size: 0.65rem;
+  line-height: 1;
+  padding: 0;
+  width: 14px;
+  flex-shrink: 0;
+}
+
+.folder-node__icon {
+  flex-shrink: 0;
+  font-size: 0.85rem;
+}
+
+.folder-node__name {
+  color: #cdd6f4;
+  flex: 1;
+  font-size: 0.85rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.folder-node__rename {
+  background: #313244;
+  border: 1px solid #89b4fa;
+  border-radius: 4px;
+  color: #cdd6f4;
+  flex: 1;
+  font-size: 0.85rem;
+  outline: none;
+  padding: 1px 6px;
+}
+
+.folder-node__count {
+  color: #45475a;
+  font-size: 0.72rem;
+  flex-shrink: 0;
+}
+
+.folder-node__actions {
+  display: none;
+  gap: 2px;
+  flex-shrink: 0;
+}
+
+.folder-node:hover .folder-node__actions {
+  display: flex;
+}
+
+.folder-node__actions button {
+  background: none;
+  border: none;
+  border-radius: 4px;
+  color: #585b70;
+  cursor: pointer;
+  font-size: 0.75rem;
+  padding: 1px 4px;
+  transition: color 0.1s, background 0.1s;
+}
+
+.folder-node__actions button:hover {
+  background: #313244;
+  color: #cdd6f4;
+}
+
+.folder-node__actions button:last-child:hover {
+  color: #f38ba8;
+}

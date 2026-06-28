@@ -5,9 +5,10 @@ type View = 'notes' | 'dashboard';
 interface Props {
   activeView: View;
   onViewChange: (v: View) => void;
+  onOpenPalette: () => void;
 }
 
-export function Sidebar({ activeView, onViewChange }: Props) {
+export function Sidebar({ activeView, onViewChange, onOpenPalette }: Props) {
   return (
     <nav className="sidebar">
       <div className="sidebar__logo">W</div>
@@ -24,6 +25,14 @@ export function Sidebar({ activeView, onViewChange }: Props) {
         title="Dashboard"
       >
         📊
+      </button>
+      <div className="sidebar__spacer" />
+      <button
+        className="sidebar__btn"
+        onClick={onOpenPalette}
+        title="Command palette (⌘K)"
+      >
+        ⌘
       </button>
     </nav>
   );

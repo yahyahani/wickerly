@@ -73,3 +73,85 @@ html, body, #root {
   justify-content: center;
   width: 100vw;
 }
+
+/* ── Left panel (folder tree + tag filter + note list) ──────────────────── */
+
+.left-panel {
+  background: #181825;
+  border-right: 1px solid #313244;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  width: 272px;
+  flex-shrink: 0;
+}
+
+.panel-toolbar {
+  border-bottom: 1px solid #313244;
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+  gap: 8px;
+  padding: 12px;
+}
+
+.panel-new-btn {
+  background: #89b4fa;
+  border: none;
+  border-radius: 6px;
+  color: #1e1e2e;
+  cursor: pointer;
+  font-size: 0.85rem;
+  font-weight: 600;
+  padding: 7px 12px;
+  text-align: left;
+  transition: background 0.15s;
+}
+
+.panel-new-btn:hover {
+  background: #74c7ec;
+}
+
+.panel-search {
+  background: #1e1e2e;
+  border: 1px solid #313244;
+  border-radius: 6px;
+  color: #cdd6f4;
+  font-size: 0.82rem;
+  outline: none;
+  padding: 6px 10px;
+  transition: border-color 0.15s;
+  width: 100%;
+}
+
+.panel-search:focus {
+  border-color: #585b70;
+}
+
+.panel-search::placeholder {
+  color: #45475a;
+}
+
+/* ── NoteEditor folder selector & meta row ──────────────────────────────── */
+
+.note-editor__controls {
+  align-items: center;
+  display: flex;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.note-editor__folder-select {
+  background: #181825;
+  border: 1px solid #313244;
+  border-radius: 6px;
+  color: #a6adc8;
+  font-size: 0.78rem;
+  outline: none;
+  padding: 3px 8px;
+  cursor: pointer;
+}
+
+.note-editor__folder-select:focus {
+  border-color: #585b70;
+}

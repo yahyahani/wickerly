@@ -36,3 +36,7 @@
 .sidebar__btn.active {
   background: #313244;
 }
+
+.sidebar__spacer {
+  flex: 1;
+}
