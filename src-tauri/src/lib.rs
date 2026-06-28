@@ -1,4 +1,6 @@
-// Learn more about Tauri commands at https://tauri.app/develop/calling-rust/
+mod sync;
+use sync::SyncState;
+
 #[tauri::command]
 fn greet(name: &str) -> String {
     format!("Hello, {}! You've been greeted from Rust!", name)
@@ -36,7 +38,18 @@ async fn export_note(title: String, content: String) -> Result<String, String> {
 pub fn run() {
     tauri::Builder::default()
         .plugin(tauri_plugin_opener::init())
-        .invoke_handler(tauri::generate_handler![greet, export_note])
+        .manage(SyncState::new())
+        .invoke_handler(tauri::generate_handler![
+            greet,
+            export_note,
+            sync::sync_start,
+            sync::sync_stop,
+            sync::sync_set_docs,
+            sync::sync_get_peers,
+            sync::sync_get_port,
+            sync::sync_fetch_peer_docs,
+            sync::sync_push_to_peer,
+        ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }

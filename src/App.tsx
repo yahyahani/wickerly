@@ -13,6 +13,7 @@ import { CommandPalette } from './components/CommandPalette';
 import { NoteEditor } from './editor/NoteEditor';
 import { Dashboard } from './dashboard/Dashboard';
 import { TEMPLATES } from './editor/templates';
+import { useSyncManager } from './sync/useSyncManager';
 import './App.css';
 
 type View   = 'notes' | 'dashboard';
@@ -25,9 +26,10 @@ interface PendingDelete {
 }
 
 function AppInner() {
-  const { notes, loading: notesLoading, createNote, updateNote, deleteNote } = useNotes();
+  const { notes, loading: notesLoading, createNote, updateNote, deleteNote, refresh } = useNotes();
   const { folders, loading: foldersLoading, createFolder, updateFolder, deleteFolder } = useFolders();
   const { query, results, search } = useSearch(notes);
+  const { notifySync } = useSyncManager(refresh);
 
   const [activeView, setActiveView]         = useState<View>('notes');
   const [activeNoteId, setActiveNoteId]     = useState<string | null>(null);
@@ -45,8 +47,9 @@ function AppInner() {
       setActiveNoteId(note.id);
       setActiveView('notes');
       setShowArchived(false);
+      notifySync();
     },
-    [activeFolderId, createNote],
+    [activeFolderId, createNote, notifySync],
   );
   const handleCreateNoteRef = useRef(handleCreateNote);
   handleCreateNoteRef.current = handleCreateNote;
@@ -150,9 +153,9 @@ function AppInner() {
   const handleTogglePin = useCallback(
     async (id: string) => {
       const note = notes.find((n) => n.id === id);
-      if (note) await updateNote(id, { pinned: !note.pinned });
+      if (note) { await updateNote(id, { pinned: !note.pinned }); notifySync(); }
     },
-    [notes, updateNote],
+    [notes, updateNote, notifySync],
   );
 
   const handleToggleArchive = useCallback(
@@ -161,8 +164,9 @@ function AppInner() {
       if (!note) return;
       await updateNote(id, { archived: !note.archived });
       if (activeNoteId === id) setActiveNoteId(null);
+      notifySync();
     },
-    [notes, updateNote, activeNoteId],
+    [notes, updateNote, activeNoteId, notifySync],
   );
 
   const handleNewFromTemplate = useCallback(
@@ -289,7 +293,7 @@ function AppInner() {
                 note={activeNote}
                 notes={notes.filter((n) => !n.archived)}
                 folders={folders}
-                onSave={(id, input) => updateNote(id, input)}
+                onSave={async (id, input) => { await updateNote(id, input); notifySync(); }}
                 onSelectNote={setActiveNoteId}
                 onTogglePin={() => handleTogglePin(activeNote.id)}
                 onToggleArchive={() => handleToggleArchive(activeNote.id)}
