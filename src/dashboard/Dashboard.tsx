@@ -10,6 +10,7 @@ import { format } from 'date-fns';
 import type { Note } from '../storage/types';
 import { useDashboardStats } from './useDashboardStats';
 import { ActivityHeatmap } from './ActivityHeatmap';
+import { useTheme } from '../hooks/useTheme';
 import './Dashboard.css';
 
 interface Props {
@@ -20,56 +21,72 @@ interface Props {
 export function Dashboard({ notes, onSelectNote }: Props) {
   const { totalNotes, dailyCounts, tagCounts, activityCells, recentNotes } =
     useDashboardStats(notes);
+  const { theme } = useTheme();
+  const dark = theme === 'dark';
+
+  const c = {
+    created:    dark ? '#5EA07E' : '#4A7C64',
+    edited:     dark ? '#C47E58' : '#B26A44',
+    axis:       dark ? '#786858' : '#907C6A',
+    tooltipBg:  dark ? '#221B14' : '#F4EFE6',
+    tooltipBdr: dark ? '#3A2E1E' : '#CFC5B2',
+    tooltipLbl: dark ? '#EDE6D2' : '#1C1610',
+    tooltipItm: dark ? '#A89880' : '#5A4E3E',
+  };
 
   return (
     <div className="dashboard">
       <h1 className="dashboard__title">Dashboard</h1>
 
-      {/* ── Stats strip ─────────────────────────────────────────────────── */}
       <div className="dashboard__stats">
-        <StatCard label="Total notes" value={totalNotes} />
-        <StatCard label="Tags in use" value={tagCounts.length} />
+        <StatCard label="Total notes"  value={totalNotes} />
+        <StatCard label="Tags in use"  value={tagCounts.length} />
         <StatCard
           label="Last edited"
-          value={
-            recentNotes[0]
-              ? format(recentNotes[0].updatedAt, 'd MMM yyyy')
-              : '—'
-          }
+          value={recentNotes[0] ? format(recentNotes[0].updatedAt, 'd MMM yyyy') : '—'}
         />
       </div>
 
-      {/* ── Notes created / edited over time ────────────────────────────── */}
       <section className="dashboard__section">
         <h2>Activity — last 30 days</h2>
-        <ResponsiveContainer width="100%" height={180}>
-          <BarChart data={dailyCounts} margin={{ top: 4, right: 8, bottom: 0, left: -20 }}>
+        <ResponsiveContainer width="100%" height={170}>
+          <BarChart data={dailyCounts} margin={{ top: 4, right: 8, bottom: 0, left: -22 }}>
             <XAxis
               dataKey="date"
-              tick={{ fill: '#585b70', fontSize: 10 }}
+              tick={{ fill: c.axis, fontSize: 10, fontFamily: 'var(--font-ui)' }}
               tickLine={false}
+              axisLine={false}
               interval={6}
             />
-            <YAxis tick={{ fill: '#585b70', fontSize: 10 }} tickLine={false} allowDecimals={false} />
-            <Tooltip
-              contentStyle={{ background: '#181825', border: '1px solid #313244', borderRadius: 6 }}
-              labelStyle={{ color: '#cdd6f4' }}
-              itemStyle={{ color: '#a6adc8' }}
+            <YAxis
+              tick={{ fill: c.axis, fontSize: 10, fontFamily: 'var(--font-ui)' }}
+              tickLine={false}
+              axisLine={false}
+              allowDecimals={false}
             />
-            <Bar dataKey="created" name="Created" fill="#89b4fa" radius={[3, 3, 0, 0]} />
-            <Bar dataKey="edited" name="Edited" fill="#a6e3a1" radius={[3, 3, 0, 0]} />
+            <Tooltip
+              cursor={{ fill: dark ? 'rgba(255,255,255,0.04)' : 'rgba(0,0,0,0.04)' }}
+              contentStyle={{
+                background: c.tooltipBg,
+                border: `1px solid ${c.tooltipBdr}`,
+                borderRadius: 8,
+                fontFamily: 'var(--font-ui)',
+              }}
+              labelStyle={{ color: c.tooltipLbl, fontWeight: 500 }}
+              itemStyle={{ color: c.tooltipItm }}
+            />
+            <Bar dataKey="created" name="Created" fill={c.created} radius={[4, 4, 0, 0]} />
+            <Bar dataKey="edited"  name="Edited"  fill={c.edited}  radius={[4, 4, 0, 0]} />
           </BarChart>
         </ResponsiveContainer>
       </section>
 
-      {/* ── Activity heatmap ────────────────────────────────────────────── */}
       <section className="dashboard__section">
         <h2>Edit heatmap — last 90 days</h2>
         <ActivityHeatmap cells={activityCells} />
       </section>
 
       <div className="dashboard__columns">
-        {/* ── Tag cloud ──────────────────────────────────────────────────── */}
         <section className="dashboard__section">
           <h2>Tag cloud</h2>
           {tagCounts.length === 0 ? (
@@ -80,26 +97,22 @@ export function Dashboard({ notes, onSelectNote }: Props) {
                 <span
                   key={tag}
                   className="tag-cloud__tag"
-                  style={{ fontSize: `${Math.max(0.75, Math.min(1.8, 0.75 + count * 0.15))}rem` }}
+                  style={{ fontSize: `${Math.max(0.75, Math.min(1.7, 0.78 + count * 0.14))}rem` }}
                 >
-                  {tag}
-                  <sup>{count}</sup>
+                  {tag}<sup>{count}</sup>
                 </span>
               ))}
             </div>
           )}
         </section>
 
-        {/* ── Recently edited ────────────────────────────────────────────── */}
         <section className="dashboard__section">
           <h2>Recently edited</h2>
           <ul className="recent-list">
             {recentNotes.map((note) => (
               <li key={note.id} className="recent-list__item" onClick={() => onSelectNote(note.id)}>
                 <span className="recent-list__title">{note.title || 'Untitled'}</span>
-                <span className="recent-list__date">
-                  {format(note.updatedAt, 'd MMM')}
-                </span>
+                <span className="recent-list__date">{format(note.updatedAt, 'd MMM')}</span>
               </li>
             ))}
           </ul>

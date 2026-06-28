@@ -7,10 +7,21 @@
 .heatmap__cell {
   aspect-ratio: 1;
   border-radius: 2px;
+  transition: opacity 120ms ease;
 }
 
-.heat-0 { background: #1e1e2e; border: 1px solid #313244; }
-.heat-1 { background: #1a3a4a; }
-.heat-2 { background: #1d6b8a; }
-.heat-3 { background: #45b0d8; }
-.heat-4 { background: #89dceb; }
+.heatmap__cell:hover { opacity: 0.75; }
+
+/* Light mode */
+.heat-0 { background: var(--border-faint); }
+.heat-1 { background: #C4D9CE; }
+.heat-2 { background: #8BBDAB; }
+.heat-3 { background: #5D9A7E; }
+.heat-4 { background: var(--accent); }
+
+/* Dark mode overrides */
+[data-theme="dark"] .heat-0 { background: var(--surface); border: 1px solid var(--border-faint); }
+[data-theme="dark"] .heat-1 { background: #1C3A2C; }
+[data-theme="dark"] .heat-2 { background: #2A5840; }
+[data-theme="dark"] .heat-3 { background: #3D7A58; }
+[data-theme="dark"] .heat-4 { background: var(--accent); }
