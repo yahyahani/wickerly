@@ -1,136 +1,154 @@
 .palette-backdrop {
   align-items: flex-start;
-  background: rgba(17, 17, 27, 0.75);
+  background: rgba(0, 0, 0, 0.35);
   display: flex;
   inset: 0;
   justify-content: center;
-  padding-top: 80px;
+  padding-top: 72px;
   position: fixed;
   z-index: 1000;
-  backdrop-filter: blur(2px);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
 }
 
 .palette {
-  background: #1e1e2e;
-  border: 1px solid #45475a;
-  border-radius: 12px;
-  box-shadow: 0 24px 64px rgba(0, 0, 0, 0.6);
+  background: var(--surface-raised);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-xl);
+  box-shadow:
+    0 2px 4px rgba(0, 0, 0, 0.06),
+    0 8px 24px rgba(0, 0, 0, 0.12),
+    0 32px 64px rgba(0, 0, 0, 0.18);
   display: flex;
   flex-direction: column;
-  max-height: 480px;
+  max-height: 500px;
   overflow: hidden;
-  width: 560px;
+  width: 540px;
 }
+
+/* ── Input row ──────────────────────────────────────────────────────────── */
 
 .palette__input-wrap {
   align-items: center;
-  border-bottom: 1px solid #313244;
+  border-bottom: 1px solid var(--border-faint);
   display: flex;
-  gap: 10px;
-  padding: 14px 16px;
+  gap: var(--sp-3);
+  padding: 14px var(--sp-4);
 }
 
 .palette__icon {
-  color: #585b70;
-  font-size: 1rem;
+  color: var(--accent);
   flex-shrink: 0;
+  font-size: 0.9rem;
+  font-weight: 600;
 }
 
 .palette__input {
   background: none;
   border: none;
-  color: #cdd6f4;
+  color: var(--text);
   flex: 1;
-  font-size: 1rem;
+  font-family: var(--font-ui);
+  font-size: var(--text-md);
   outline: none;
 }
 
-.palette__input::placeholder {
-  color: #45475a;
-}
+.palette__input::placeholder { color: var(--text-ghost); }
 
 .palette__esc {
-  background: #313244;
-  border: 1px solid #45475a;
-  border-radius: 4px;
-  color: #585b70;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  color: var(--text-muted);
   cursor: pointer;
-  font-family: inherit;
-  font-size: 0.7rem;
-  padding: 2px 6px;
+  font-family: var(--font-ui);
+  font-size: var(--text-xs);
+  padding: 2px 7px;
 }
+
+/* ── Results list ───────────────────────────────────────────────────────── */
 
 .palette__list {
   flex: 1;
   list-style: none;
   margin: 0;
   overflow-y: auto;
-  padding: 6px;
+  padding: var(--sp-2);
 }
 
 .palette__empty {
-  color: #45475a;
-  font-size: 0.875rem;
-  padding: 20px;
+  color: var(--text-muted);
+  font-size: var(--text-base);
+  padding: var(--sp-5);
   text-align: center;
 }
 
 .palette__item {
   align-items: center;
-  border-radius: 8px;
+  border-radius: var(--radius);
   cursor: pointer;
   display: flex;
-  gap: 10px;
-  padding: 9px 12px;
-  transition: background 0.08s;
+  gap: var(--sp-3);
+  padding: 9px var(--sp-3);
+  transition: background var(--ease);
 }
 
-.palette__item.active,
-.palette__item:hover {
-  background: #313244;
-}
+.palette__item.active { background: var(--accent-bg); }
+.palette__item:not(.active):hover { background: var(--surface); }
 
 .palette__item-icon {
   flex-shrink: 0;
-  font-size: 1rem;
-  width: 20px;
+  font-size: 0.95rem;
+  opacity: 0.8;
   text-align: center;
+  width: 20px;
 }
 
 .palette__item-label {
-  color: #cdd6f4;
+  color: var(--text);
   flex: 1;
-  font-size: 0.9rem;
+  font-size: var(--text-base);
+  font-weight: 500;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 
+.palette__item.active .palette__item-label { color: var(--accent); }
+
 .palette__item-description {
-  color: #585b70;
-  font-size: 0.78rem;
+  color: var(--text-muted);
   flex-shrink: 0;
+  font-size: var(--text-sm);
 }
 
 .palette__item-tags {
   display: flex;
-  gap: 4px;
   flex-shrink: 0;
+  gap: 3px;
 }
 
 .palette__tag {
-  background: #1e1e2e;
-  border-radius: 10px;
-  color: #7f849c;
-  font-size: 0.67rem;
+  background: var(--warm-bg);
+  border-radius: 9px;
+  color: var(--warm);
+  font-size: 0.65rem;
   padding: 1px 6px;
 }
 
+/* ── Footer hints ───────────────────────────────────────────────────────── */
+
 .palette__footer {
-  border-top: 1px solid #313244;
-  color: #45475a;
+  border-top: 1px solid var(--border-faint);
+  color: var(--text-ghost);
   display: flex;
-  font-size: 0.7rem;
-  gap: 16px;
-  padding: 8px 16px;
+  font-size: var(--text-xs);
+  gap: var(--sp-4);
+  padding: var(--sp-2) var(--sp-4);
+}
+
+.palette__footer span::before {
+  color: var(--text-muted);
+  font-weight: 500;
+  margin-right: 4px;
 }
