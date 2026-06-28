@@ -222,6 +222,67 @@ body { background: var(--bg); color: var(--text); }
   font-size: var(--text-sm);
 }
 
+/* ── Global enter animation (used by note-editor, app__empty, etc.) ──────── */
+
+@keyframes note-enter {
+  from { opacity: 0; transform: translateY(5px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.app__empty { animation: note-enter 200ms ease; }
+
+/* ── Undo-delete toast ───────────────────────────────────────────────────── */
+
+@keyframes toast-in {
+  from { opacity: 0; transform: translateX(-50%) translateY(10px); }
+  to   { opacity: 1; transform: translateX(-50%) translateY(0); }
+}
+
+.toast {
+  align-items: center;
+  animation: toast-in 200ms ease;
+  backdrop-filter: var(--blur-md);
+  -webkit-backdrop-filter: var(--blur-md);
+  background: var(--glass-raised);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  bottom: var(--sp-6);
+  box-shadow: var(--shadow-xl);
+  display: flex;
+  gap: var(--sp-3);
+  left: 50%;
+  padding: 10px 16px;
+  position: fixed;
+  transform: translateX(-50%);
+  z-index: 100;
+}
+
+.toast__msg {
+  color: var(--text);
+  font-size: var(--text-base);
+  white-space: nowrap;
+}
+
+.toast__undo {
+  background: var(--accent);
+  border: none;
+  border-radius: var(--radius-sm);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.22);
+  color: var(--accent-text);
+  cursor: pointer;
+  font-family: var(--font-ui);
+  font-size: var(--text-sm);
+  font-weight: 500;
+  padding: 4px 12px;
+  transition: background var(--ease), box-shadow var(--ease);
+  white-space: nowrap;
+}
+
+.toast__undo:hover {
+  background: var(--accent-hover);
+  box-shadow: var(--shadow-xs), inset 0 1px 0 rgba(255,255,255,0.22);
+}
+
 /* ── Note-editor inline overrides (folder select + controls) ───────────── */
 
 .note-editor__controls {

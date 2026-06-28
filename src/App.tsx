@@ -18,6 +18,12 @@ import './App.css';
 type View   = 'notes' | 'dashboard';
 type SortBy = 'updated' | 'created' | 'title-asc' | 'title-desc';
 
+interface PendingDelete {
+  id: string;
+  title: string;
+  timer: ReturnType<typeof setTimeout>;
+}
+
 function AppInner() {
   const { notes, loading: notesLoading, createNote, updateNote, deleteNote } = useNotes();
   const { folders, loading: foldersLoading, createFolder, updateFolder, deleteFolder } = useFolders();
@@ -30,8 +36,9 @@ function AppInner() {
   const [paletteOpen, setPaletteOpen]       = useState(false);
   const [sortBy, setSortBy]                 = useState<SortBy>('updated');
   const [showArchived, setShowArchived]     = useState(false);
+  const [pendingDelete, setPendingDelete]   = useState<PendingDelete | null>(null);
 
-  // ── Stable ref so keyboard handler always calls latest handleCreateNote ────
+  // Stable ref so keyboard handler always calls latest handleCreateNote
   const handleCreateNote = useCallback(
     async (folderId: string | null = activeFolderId) => {
       const note = await createNote({ title: '', content: '', tags: [], folderId });
@@ -44,7 +51,7 @@ function AppInner() {
   const handleCreateNoteRef = useRef(handleCreateNote);
   handleCreateNoteRef.current = handleCreateNote;
 
-  // ── Global keyboard shortcuts ──────────────────────────────────────────────
+  // Global keyboard shortcuts
   useEffect(() => {
     function onKeyDown(e: KeyboardEvent) {
       if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
@@ -61,7 +68,11 @@ function AppInner() {
     return () => window.removeEventListener('keydown', onKeyDown);
   }, [paletteOpen]);
 
-  // ── Derived state ──────────────────────────────────────────────────────────
+  // Use a ref so handleDeleteNote doesn't depend on pendingDelete state
+  const pendingDeleteRef = useRef(pendingDelete);
+  pendingDeleteRef.current = pendingDelete;
+
+  // Derived state
   const allTags = useMemo(() => {
     const set = new Set<string>();
     for (const n of notes) if (!n.archived) for (const t of n.tags) set.add(t);
@@ -78,14 +89,15 @@ function AppInner() {
       ? notes.filter((n) => n.archived)
       : notes.filter((n) => !n.archived);
 
+    // Hide the note that's pending deletion
+    if (pendingDelete) filtered = filtered.filter((n) => n.id !== pendingDelete.id);
+
     if (!showArchived && activeFolderId !== null) {
       filtered = filtered.filter((n) => n.folderId === activeFolderId);
     }
-
     if (activeTags.length > 0) {
       filtered = filtered.filter((n) => activeTags.some((t) => n.tags.includes(t)));
     }
-
     if (query.trim()) {
       const ids = new Set(results.map((r) => r.noteId));
       filtered = filtered.filter((n) => ids.has(n.id));
@@ -99,21 +111,41 @@ function AppInner() {
       case 'title-desc': sorted.sort((a, b) => (b.title || '').localeCompare(a.title || '')); break;
     }
     return sorted;
-  }, [notes, showArchived, activeFolderId, activeTags, query, results, sortBy]);
+  }, [notes, pendingDelete, showArchived, activeFolderId, activeTags, query, results, sortBy]);
 
   const activeNote = useMemo(
     () => notes.find((n) => n.id === activeNoteId) ?? null,
     [notes, activeNoteId],
   );
 
-  // ── Actions ────────────────────────────────────────────────────────────────
+  // Actions
   const handleDeleteNote = useCallback(
     async (id: string) => {
-      await deleteNote(id);
+      // Commit any previous pending delete before starting a new one
+      const prev = pendingDeleteRef.current;
+      if (prev) {
+        clearTimeout(prev.timer);
+        await deleteNote(prev.id);
+      }
+
       if (activeNoteId === id) setActiveNoteId(null);
+
+      const note = notes.find((n) => n.id === id);
+      const timer = setTimeout(async () => {
+        await deleteNote(id);
+        setPendingDelete(null);
+      }, 5000);
+
+      setPendingDelete({ id, title: note?.title || 'Untitled', timer });
     },
-    [deleteNote, activeNoteId],
+    [deleteNote, activeNoteId, notes],
   );
+
+  const handleUndoDelete = () => {
+    if (!pendingDelete) return;
+    clearTimeout(pendingDelete.timer);
+    setPendingDelete(null);
+  };
 
   const handleTogglePin = useCallback(
     async (id: string) => {
@@ -240,10 +272,13 @@ function AppInner() {
               folders={folders}
               activeNoteId={activeNoteId}
               showArchived={showArchived}
+              hasSearchQuery={!!query.trim()}
               onSelectNote={setActiveNoteId}
               onDeleteNote={handleDeleteNote}
               onTogglePin={handleTogglePin}
               onToggleArchive={handleToggleArchive}
+              onCreateNote={() => handleCreateNote()}
+              onClearSearch={() => search('')}
             />
           </div>
 
@@ -290,6 +325,16 @@ function AppInner() {
           onViewChange={setActiveView}
           onNewFromTemplate={handleNewFromTemplate}
         />
+      )}
+
+      {/* ── Undo-delete toast ─────────────────────────────────────────────── */}
+      {pendingDelete && (
+        <div className="toast">
+          <span className="toast__msg">"{pendingDelete.title}" verwijderd</span>
+          <button className="toast__undo" onClick={handleUndoDelete}>
+            Ongedaan maken
+          </button>
+        </div>
       )}
     </div>
   );

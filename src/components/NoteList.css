@@ -149,3 +149,46 @@
   background: var(--warm-bg);
   color: var(--warm);
 }
+
+/* ── Context-aware empty states ──────────────────────────────────────────── */
+
+.note-list__empty-state {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-3);
+  padding: var(--sp-8) var(--sp-4);
+  text-align: center;
+}
+
+.note-list__empty-icon {
+  color: var(--text-ghost);
+  opacity: 0.7;
+}
+
+.note-list__empty-msg {
+  color: var(--text-muted);
+  font-size: var(--text-base);
+  line-height: 1.4;
+}
+
+.note-list__empty-action {
+  background: linear-gradient(180deg, rgba(255,255,255,0.12) 0%, rgba(0,0,0,0.04) 100%),
+              var(--accent);
+  border: 1px solid var(--accent-hover);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-xs), inset 0 1px 0 rgba(255,255,255,0.22);
+  color: var(--accent-text);
+  cursor: pointer;
+  font-family: var(--font-ui);
+  font-size: var(--text-sm);
+  font-weight: 500;
+  padding: 6px 16px;
+  transition: background var(--ease), box-shadow var(--ease), transform var(--ease);
+}
+
+.note-list__empty-action:hover {
+  background: var(--accent-hover);
+  box-shadow: var(--shadow-sm);
+  transform: translateY(-1px);
+}

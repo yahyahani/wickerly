@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback, useRef, useMemo } from 'react';
 import { invoke } from '@tauri-apps/api/core';
-import { Pin, PinOff, Archive, ArchiveRestore, Download } from 'lucide-react';
+import { Pin, PinOff, Archive, ArchiveRestore, Download, Link2 } from 'lucide-react';
 import { MarkdownEditor } from './MarkdownEditor';
 import { MarkdownPreview } from './MarkdownPreview';
 import type { Note, Folder, NoteUpdateInput } from '../storage/types';
@@ -28,13 +28,29 @@ export function NoteEditor({
   const [preview, setPreview]     = useState(false);
   const [saving, setSaving]       = useState(false);
   const [exportMsg, setExportMsg] = useState<string | null>(null);
+  const [entering, setEntering]   = useState(false);
   const saveTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const prevNoteId = useRef(note.id);
 
+  // Sync local state + trigger enter animation when note changes
   useEffect(() => {
-    setTitle(note.title);
-    setContent(note.content);
-    setTags(note.tags);
-  }, [note.id]);
+    if (prevNoteId.current !== note.id) {
+      setTitle(note.title);
+      setContent(note.content);
+      setTags(note.tags);
+      setEntering(true);
+      prevNoteId.current = note.id;
+      const t = setTimeout(() => setEntering(false), 200);
+      return () => clearTimeout(t);
+    }
+  }, [note.id, note.title, note.content, note.tags]);
+
+  // Flush pending save on unmount
+  useEffect(() => {
+    return () => {
+      if (saveTimer.current) clearTimeout(saveTimer.current);
+    };
+  }, []);
 
   const wordCount = useMemo(() => {
     const text = content.trim();
@@ -42,6 +58,15 @@ export function NoteEditor({
   }, [content]);
 
   const readingTime = Math.max(1, Math.ceil(wordCount / 238));
+
+  // Backlinks: notes that contain [[this note's title]]
+  const backlinks = useMemo(() => {
+    const t = note.title.trim();
+    if (!t) return [];
+    const escaped = t.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    const pattern = new RegExp(`\\[\\[${escaped}\\]\\]`, 'i');
+    return notes.filter((n) => n.id !== note.id && !n.archived && pattern.test(n.content));
+  }, [notes, note.id, note.title]);
 
   const scheduleSave = useCallback(
     (patch: NoteUpdateInput) => {
@@ -85,10 +110,26 @@ export function NoteEditor({
     setTimeout(() => setExportMsg(null), 3000);
   };
 
+  const handleToggleCheckbox = useCallback(
+    (index: number, checked: boolean) => {
+      let i = 0;
+      const newContent = content.replace(
+        /^(- \[)(x| )(\] .+)$/gim,
+        (match, pre, _state, post) => {
+          if (i++ === index) return `${pre}${checked ? 'x' : ' '}${post}`;
+          return match;
+        },
+      );
+      setContent(newContent);
+      scheduleSave({ title, content: newContent, tags });
+    },
+    [content, title, tags, scheduleSave],
+  );
+
   const statusText = exportMsg ?? (saving ? 'Saving…' : null);
 
   return (
-    <div className="note-editor">
+    <div className={`note-editor${entering ? ' note-editor--entering' : ''}`}>
       <div className="note-editor__header">
         <input
           className="note-editor__title"
@@ -158,11 +199,36 @@ export function NoteEditor({
 
       <div className="note-editor__body">
         {preview ? (
-          <MarkdownPreview content={content} notes={notes} onSelectNote={onSelectNote} />
+          <MarkdownPreview
+            content={content}
+            notes={notes}
+            onSelectNote={onSelectNote}
+            onToggleCheckbox={handleToggleCheckbox}
+          />
         ) : (
           <MarkdownEditor value={content} onChange={handleContentChange} />
         )}
       </div>
+
+      {backlinks.length > 0 && (
+        <div className="note-editor__backlinks">
+          <div className="note-editor__backlinks-header">
+            <Link2 size={12} strokeWidth={1.8} />
+            Gelinkt vanuit {backlinks.length} {backlinks.length === 1 ? 'notitie' : 'notities'}
+          </div>
+          <ul className="note-editor__backlinks-list">
+            {backlinks.map((bl) => (
+              <li
+                key={bl.id}
+                className="note-editor__backlinks-item"
+                onClick={() => onSelectNote(bl.id)}
+              >
+                {bl.title || 'Untitled'}
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
     </div>
   );
 }
