@@ -1,10 +1,14 @@
 .sidebar {
   align-items: center;
-  backdrop-filter: var(--blur-md);
-  -webkit-backdrop-filter: var(--blur-md);
+  backdrop-filter: var(--blur-lg);
+  -webkit-backdrop-filter: var(--blur-lg);
   background: var(--glass-sidebar);
   border-right: 1px solid var(--border);
-  box-shadow: var(--shadow-md), inset -1px 0 0 var(--glass-stroke);
+  /* Shadow casts RIGHTWARD onto the left panel — creates the "layer above" perception */
+  box-shadow:
+    2px 0 20px rgba(28, 22, 16, 0.13),
+    6px 0 40px rgba(28, 22, 16, 0.07),
+    inset -1px 0 0 var(--glass-stroke);
   display: flex;
   flex-direction: column;
   flex-shrink: 0;
@@ -12,6 +16,13 @@
   padding: var(--sp-3) 0;
   width: 50px;
   z-index: 10;
+}
+
+[data-theme="dark"] .sidebar {
+  box-shadow:
+    2px 0 20px rgba(0, 0, 0, 0.52),
+    6px 0 40px rgba(0, 0, 0, 0.30),
+    inset -1px 0 0 var(--glass-stroke);
 }
 
 .sidebar__logo {

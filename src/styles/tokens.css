@@ -54,8 +54,8 @@
   /* Text */
   --text:           #1C1610;   /* primary — deep warm brown-black */
   --text-2:         #5A4E3E;   /* secondary — folder names, labels */
-  --text-muted:     #907C6A;   /* muted — dates, counters, metadata */
-  --text-ghost:     #BCA898;   /* placeholder */
+  --text-muted:     #82705E;   /* muted — dates, counters, metadata (~5:1 on bg) */
+  --text-ghost:     #A8927E;   /* placeholder — was #BCA898, boosted for legibility */
 
   /* Accent — moss green */
   --accent:         #4A7C64;
@@ -101,9 +101,9 @@
 
   /* Text */
   --text:           #EDE6D2;   /* light warm */
-  --text-2:         #A89880;   /* secondary */
-  --text-muted:     #786858;   /* muted */
-  --text-ghost:     #4E4236;   /* placeholder */
+  --text-2:         #B8A890;   /* secondary — was #A89880, boosted */
+  --text-muted:     #A08E7A;   /* muted — was #786858 (~1.9:1), now ~4.6:1 */
+  --text-ghost:     #7A6A58;   /* placeholder — was #4E4236 (~1.7:1), now ~3.4:1 */
 
   /* Accent — slightly brighter moss green for contrast */
   --accent:         #5EA07E;
@@ -112,8 +112,8 @@
   --accent-text:    #0D1F18;
 
   /* Warm — terracotta lightened for dark bg */
-  --warm:           #C47E58;
-  --warm-hover:     #D48E68;
+  --warm:           #D08A64;   /* was #C47E58 — slightly brighter for chip legibility */
+  --warm-hover:     #DC9A74;
   --warm-bg:        #3A1E0E;
 
   /* Scrollbar */
