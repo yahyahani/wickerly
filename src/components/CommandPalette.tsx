@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef, useMemo } from 'react';
-import { FilePlus, FileText, LayoutDashboard, Search } from 'lucide-react';
+import { FilePlus, FileText, LayoutDashboard, Search, LayoutTemplate } from 'lucide-react';
+import { TEMPLATES } from '../editor/templates';
 import type { Note } from '../storage/types';
 import './CommandPalette.css';
 
@@ -25,18 +26,26 @@ interface Props {
   onSelectNote: (id: string) => void;
   onNewNote: () => void;
   onViewChange: (v: View) => void;
+  onNewFromTemplate: (templateId: string) => void;
 }
 
 const STATIC_ACTIONS: Action[] = [
-  { kind: 'action', id: 'new-note',   label: 'New note',          description: 'Create a new empty note' },
-  { kind: 'action', id: 'notes',      label: 'Go to Notes',       description: 'Switch to the notes view' },
-  { kind: 'action', id: 'dashboard',  label: 'Go to Dashboard',   description: 'Switch to the dashboard view' },
+  { kind: 'action', id: 'new-note',   label: 'New note',        description: 'Create a new empty note' },
+  { kind: 'action', id: 'notes',      label: 'Go to Notes',     description: 'Switch to the notes view' },
+  { kind: 'action', id: 'dashboard',  label: 'Go to Dashboard', description: 'Switch to the dashboard view' },
+  ...TEMPLATES.map((t) => ({
+    kind: 'action' as const,
+    id: `template:${t.id}`,
+    label: `New: ${t.label}`,
+    description: 'Create note from template',
+  })),
 ];
 
 function ActionIcon({ id }: { id: string }) {
-  if (id === 'new-note')  return <FilePlus size={15} strokeWidth={1.7} />;
-  if (id === 'notes')     return <FileText size={15} strokeWidth={1.7} />;
-  if (id === 'dashboard') return <LayoutDashboard size={15} strokeWidth={1.7} />;
+  if (id === 'new-note')           return <FilePlus size={15} strokeWidth={1.7} />;
+  if (id === 'notes')              return <FileText size={15} strokeWidth={1.7} />;
+  if (id === 'dashboard')          return <LayoutDashboard size={15} strokeWidth={1.7} />;
+  if (id.startsWith('template:'))  return <LayoutTemplate size={15} strokeWidth={1.7} />;
   return null;
 }
 
@@ -49,7 +58,9 @@ function scoreMatch(label: string, query: string): number {
   return 0;
 }
 
-export function CommandPalette({ notes, onClose, onSelectNote, onNewNote, onViewChange }: Props) {
+export function CommandPalette({
+  notes, onClose, onSelectNote, onNewNote, onViewChange, onNewFromTemplate,
+}: Props) {
   const [query, setQuery] = useState('');
   const [index, setIndex] = useState(0);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -84,7 +95,6 @@ export function CommandPalette({ notes, onClose, onSelectNote, onNewNote, onView
     return [...matchedActions, ...matchedNotes];
   }, [query, notes]);
 
-  // Reset index when items change
   useEffect(() => { setIndex(0); }, [items]);
 
   function handleKeyDown(e: React.KeyboardEvent) {
@@ -102,11 +112,11 @@ export function CommandPalette({ notes, onClose, onSelectNote, onNewNote, onView
       if (item.id === 'new-note')  onNewNote();
       if (item.id === 'notes')     onViewChange('notes');
       if (item.id === 'dashboard') onViewChange('dashboard');
+      if (item.id.startsWith('template:')) onNewFromTemplate(item.id.replace('template:', ''));
     }
     onClose();
   }
 
-  // Scroll active item into view
   useEffect(() => {
     const el = listRef.current?.children[index] as HTMLElement | undefined;
     el?.scrollIntoView({ block: 'nearest' });

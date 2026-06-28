@@ -1,5 +1,5 @@
 import { format } from 'date-fns';
-import { Folder as FolderIcon, Tag, Trash2 } from 'lucide-react';
+import { Folder as FolderIcon, Tag, Trash2, Pin, PinOff, Archive, ArchiveRestore } from 'lucide-react';
 import type { Note, Folder } from '../storage/types';
 import './NoteList.css';
 
@@ -7,54 +7,112 @@ interface Props {
   notes: Note[];
   folders: Folder[];
   activeNoteId: string | null;
+  showArchived: boolean;
   onSelectNote: (id: string) => void;
   onDeleteNote: (id: string) => void;
+  onTogglePin: (id: string) => void;
+  onToggleArchive: (id: string) => void;
 }
 
-export function NoteList({ notes, folders, activeNoteId, onSelectNote, onDeleteNote }: Props) {
+export function NoteList({
+  notes,
+  folders,
+  activeNoteId,
+  showArchived,
+  onSelectNote,
+  onDeleteNote,
+  onTogglePin,
+  onToggleArchive,
+}: Props) {
   const folderMap = new Map(folders.map((f) => [f.id, f.name]));
+  const pinned  = showArchived ? [] : notes.filter((n) => n.pinned);
+  const regular = showArchived ? notes : notes.filter((n) => !n.pinned);
 
-  return (
-    <ul className="note-list">
-      {notes.length === 0 && (
-        <li className="note-list__empty">No notes</li>
-      )}
-      {notes.map((note) => (
-        <li
-          key={note.id}
-          className={`note-list__item ${note.id === activeNoteId ? 'active' : ''}`}
-          onClick={() => onSelectNote(note.id)}
-        >
-          <div className="note-list__item-row">
-            <span className="note-list__item-title">{note.title || 'Untitled'}</span>
-            <span className="note-list__item-date">{format(note.updatedAt, 'd MMM')}</span>
+  function renderItem(note: Note) {
+    const isActive = note.id === activeNoteId;
+    return (
+      <li
+        key={note.id}
+        className={`note-list__item${isActive ? ' active' : ''}`}
+        onClick={() => onSelectNote(note.id)}
+      >
+        <div className="note-list__item-row">
+          <span className="note-list__item-title">{note.title || 'Untitled'}</span>
+          <span className="note-list__item-date">{format(note.updatedAt, 'd MMM')}</span>
+        </div>
+
+        {note.folderId && (
+          <span className="note-list__item-folder">
+            <FolderIcon size={10} strokeWidth={1.8} style={{ marginRight: 3, verticalAlign: 'middle' }} />
+            {folderMap.get(note.folderId) ?? '—'}
+          </span>
+        )}
+
+        {note.tags.length > 0 && (
+          <div className="note-list__item-tags">
+            <Tag size={10} strokeWidth={1.8} className="note-list__tag-icon" />
+            {note.tags.slice(0, 4).map((t) => (
+              <span key={t} className="note-list__tag">{t}</span>
+            ))}
           </div>
-          {note.folderId && (
-            <span className="note-list__item-folder">
-              <FolderIcon size={10} strokeWidth={1.8} style={{ marginRight: 3, verticalAlign: 'middle' }} />
-              {folderMap.get(note.folderId) ?? '—'}
-            </span>
-          )}
-          {note.tags.length > 0 && (
-            <div className="note-list__item-tags">
-              <Tag size={10} strokeWidth={1.8} className="note-list__tag-icon" />
-              {note.tags.slice(0, 4).map((t) => (
-                <span key={t} className="note-list__tag">{t}</span>
-              ))}
-            </div>
+        )}
+
+        <div className="note-list__actions">
+          {!showArchived && (
+            <button
+              className={`note-list__action-btn${note.pinned ? ' active' : ''}`}
+              title={note.pinned ? 'Unpin' : 'Pin'}
+              onClick={(e) => { e.stopPropagation(); onTogglePin(note.id); }}
+            >
+              {note.pinned
+                ? <PinOff size={11} strokeWidth={1.8} />
+                : <Pin size={11} strokeWidth={1.8} />}
+            </button>
           )}
           <button
-            className="note-list__delete-btn"
+            className="note-list__action-btn"
+            title={showArchived ? 'Unarchive' : 'Archive'}
+            onClick={(e) => { e.stopPropagation(); onToggleArchive(note.id); }}
+          >
+            {showArchived
+              ? <ArchiveRestore size={11} strokeWidth={1.8} />
+              : <Archive size={11} strokeWidth={1.8} />}
+          </button>
+          <button
+            className="note-list__action-btn note-list__action-btn--delete"
+            title="Delete"
             onClick={(e) => {
               e.stopPropagation();
               if (confirm(`Delete "${note.title || 'Untitled'}"?`)) onDeleteNote(note.id);
             }}
-            title="Delete note"
           >
-            <Trash2 size={12} strokeWidth={1.8} />
+            <Trash2 size={11} strokeWidth={1.8} />
           </button>
+        </div>
+      </li>
+    );
+  }
+
+  if (notes.length === 0) {
+    return (
+      <ul className="note-list">
+        <li className="note-list__empty">
+          {showArchived ? 'Nothing archived' : 'No notes'}
         </li>
-      ))}
+      </ul>
+    );
+  }
+
+  return (
+    <ul className="note-list">
+      {pinned.length > 0 && (
+        <>
+          <li className="note-list__section-header">Pinned</li>
+          {pinned.map(renderItem)}
+          {regular.length > 0 && <li className="note-list__section-divider" />}
+        </>
+      )}
+      {regular.map(renderItem)}
     </ul>
   );
 }
