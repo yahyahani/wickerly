@@ -1,22 +1,16 @@
-*, *::before, *::after {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
 :root {
-  font-family: Inter, system-ui, -apple-system, sans-serif;
+  font-family: var(--font-ui);
   font-size: 15px;
   -webkit-font-smoothing: antialiased;
-  background: #1e1e2e;
-  color: #cdd6f4;
 }
 
-html, body, #root {
-  height: 100%;
-  width: 100%;
-  overflow: hidden;
-}
+html, body, #root { height: 100%; width: 100%; overflow: hidden; }
+
+body { background: var(--bg); color: var(--text); }
+
+/* ── App shell ──────────────────────────────────────────────────────────── */
 
 .app {
   display: flex;
@@ -30,55 +24,52 @@ html, body, #root {
   overflow: hidden;
   display: flex;
   flex-direction: column;
+  background: var(--bg);
 }
 
 .app__empty {
   align-items: center;
-  color: #45475a;
+  color: var(--text-muted);
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: var(--sp-4);
   height: 100%;
   justify-content: center;
 }
 
-.app__empty p {
-  font-size: 1rem;
-}
+.app__empty p { font-size: var(--text-base); }
 
 .app__empty-btn {
-  background: #313244;
+  background: var(--accent);
   border: none;
-  border-radius: 8px;
-  color: #cdd6f4;
+  border-radius: var(--radius);
+  color: var(--accent-text);
   cursor: pointer;
-  font-size: 0.875rem;
-  font-weight: 600;
-  padding: 10px 20px;
-  transition: background 0.15s;
+  font-family: var(--font-ui);
+  font-size: var(--text-base);
+  font-weight: 500;
+  padding: 9px 20px;
+  transition: background var(--ease);
 }
 
-.app__empty-btn:hover {
-  background: #89b4fa;
-  color: #1e1e2e;
-}
+.app__empty-btn:hover { background: var(--accent-hover); }
 
 .app-loading {
   align-items: center;
-  background: #1e1e2e;
-  color: #6c7086;
+  background: var(--bg);
+  color: var(--text-muted);
   display: flex;
-  font-size: 1rem;
+  font-size: var(--text-md);
   height: 100vh;
   justify-content: center;
   width: 100vw;
 }
 
-/* ── Left panel (folder tree + tag filter + note list) ──────────────────── */
+/* ── Left panel ─────────────────────────────────────────────────────────── */
 
 .left-panel {
-  background: #181825;
-  border-right: 1px solid #313244;
+  background: var(--surface);
+  border-right: 1px solid var(--border);
   display: flex;
   flex-direction: column;
   overflow: hidden;
@@ -87,71 +78,66 @@ html, body, #root {
 }
 
 .panel-toolbar {
-  border-bottom: 1px solid #313244;
+  border-bottom: 1px solid var(--border-faint);
   display: flex;
   flex-direction: column;
   flex-shrink: 0;
-  gap: 8px;
-  padding: 12px;
+  gap: var(--sp-2);
+  padding: var(--sp-3);
 }
 
 .panel-new-btn {
-  background: #89b4fa;
+  background: var(--accent);
   border: none;
-  border-radius: 6px;
-  color: #1e1e2e;
+  border-radius: var(--radius);
+  color: var(--accent-text);
   cursor: pointer;
-  font-size: 0.85rem;
-  font-weight: 600;
-  padding: 7px 12px;
+  font-family: var(--font-ui);
+  font-size: var(--text-sm);
+  font-weight: 500;
+  padding: 7px var(--sp-3);
   text-align: left;
-  transition: background 0.15s;
+  transition: background var(--ease);
 }
 
-.panel-new-btn:hover {
-  background: #74c7ec;
-}
+.panel-new-btn:hover { background: var(--accent-hover); }
 
 .panel-search {
-  background: #1e1e2e;
-  border: 1px solid #313244;
-  border-radius: 6px;
-  color: #cdd6f4;
-  font-size: 0.82rem;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  color: var(--text);
+  font-family: var(--font-ui);
+  font-size: var(--text-sm);
   outline: none;
   padding: 6px 10px;
-  transition: border-color 0.15s;
+  transition: border-color var(--ease);
   width: 100%;
 }
 
-.panel-search:focus {
-  border-color: #585b70;
-}
+.panel-search:focus { border-color: var(--accent); }
+.panel-search::placeholder { color: var(--text-ghost); }
 
-.panel-search::placeholder {
-  color: #45475a;
-}
-
-/* ── NoteEditor folder selector & meta row ──────────────────────────────── */
+/* ── Note-editor inline overrides (folder select + controls) ───────────── */
 
 .note-editor__controls {
   align-items: center;
   display: flex;
-  gap: 8px;
+  gap: var(--sp-2);
   flex-shrink: 0;
 }
 
 .note-editor__folder-select {
-  background: #181825;
-  border: 1px solid #313244;
-  border-radius: 6px;
-  color: #a6adc8;
-  font-size: 0.78rem;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  color: var(--text-2);
+  font-family: var(--font-ui);
+  font-size: var(--text-sm);
   outline: none;
   padding: 3px 8px;
   cursor: pointer;
+  transition: border-color var(--ease);
 }
 
-.note-editor__folder-select:focus {
-  border-color: #585b70;
-}
+.note-editor__folder-select:focus { border-color: var(--accent); }

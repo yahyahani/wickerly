@@ -1,42 +1,61 @@
 .sidebar {
   align-items: center;
-  background: #11111b;
-  border-right: 1px solid #1e1e2e;
+  background: var(--surface);
+  border-right: 1px solid var(--border);
   display: flex;
   flex-direction: column;
-  gap: 4px;
-  padding: 12px 0;
-  width: 52px;
+  gap: var(--sp-1);
+  padding: var(--sp-3) 0;
+  width: 50px;
   flex-shrink: 0;
 }
 
 .sidebar__logo {
-  color: #cba6f7;
-  font-size: 1.4rem;
-  font-weight: 900;
-  margin-bottom: 12px;
+  color: var(--accent);
+  font-family: var(--font-ui);
+  font-size: 1.3rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  margin-bottom: var(--sp-3);
   user-select: none;
 }
 
 .sidebar__btn {
+  align-items: center;
   background: none;
   border: none;
-  border-radius: 8px;
+  border-radius: var(--radius);
+  color: var(--text-muted);
   cursor: pointer;
-  font-size: 1.2rem;
-  height: 40px;
-  transition: background 0.15s;
-  width: 40px;
+  display: flex;
+  height: 36px;
+  justify-content: center;
+  position: relative;
+  transition: background var(--ease), color var(--ease);
+  width: 36px;
 }
 
 .sidebar__btn:hover {
-  background: #1e1e2e;
+  background: var(--surface-raised);
+  color: var(--text-2);
 }
 
 .sidebar__btn.active {
-  background: #313244;
+  background: var(--accent-bg);
+  color: var(--accent);
 }
 
-.sidebar__spacer {
-  flex: 1;
+/* Thin left accent stripe for active state */
+.sidebar__btn.active::before {
+  background: var(--accent);
+  border-radius: 0 3px 3px 0;
+  content: '';
+  height: 18px;
+  left: -7px;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 3px;
 }
+
+.sidebar__spacer { flex: 1; }

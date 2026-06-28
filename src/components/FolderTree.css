@@ -1,104 +1,106 @@
 .folder-tree {
-  border-bottom: 1px solid #313244;
+  border-bottom: 1px solid var(--border-faint);
   flex-shrink: 0;
-  padding-bottom: 4px;
+  padding-bottom: var(--sp-1);
 }
 
 .folder-tree__header {
   align-items: center;
   display: flex;
   justify-content: space-between;
-  padding: 8px 12px 4px;
+  padding: var(--sp-2) var(--sp-3) var(--sp-1);
 }
 
 .folder-tree__title {
-  color: #6c7086;
-  font-size: 0.7rem;
+  color: var(--text-muted);
+  font-size: var(--text-xs);
   font-weight: 600;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.07em;
   text-transform: uppercase;
 }
 
 .folder-tree__add {
   background: none;
   border: none;
-  color: #585b70;
+  border-radius: var(--radius-sm);
+  color: var(--text-muted);
   cursor: pointer;
-  font-size: 0.72rem;
+  font-family: var(--font-ui);
+  font-size: var(--text-xs);
   padding: 2px 6px;
-  border-radius: 4px;
-  transition: color 0.15s, background 0.15s;
+  transition: background var(--ease), color var(--ease);
 }
 
 .folder-tree__add:hover {
-  background: #313244;
-  color: #cdd6f4;
+  background: var(--surface-raised);
+  color: var(--accent);
 }
 
-/* ── Individual folder node ─────────────────────────────────────────────── */
+/* ── Individual folder row ───────────────────────────────────────────────── */
 
 .folder-node {
   align-items: center;
-  border-radius: 6px;
+  border-radius: var(--radius);
   cursor: pointer;
   display: flex;
-  gap: 4px;
-  margin: 1px 4px;
+  gap: var(--sp-1);
+  margin: 1px var(--sp-2);
   padding: 5px 8px;
   position: relative;
-  transition: background 0.1s;
+  transition: background var(--ease);
   user-select: none;
 }
 
-.folder-node:hover {
-  background: #1e1e2e;
-}
-
-.folder-node.active {
-  background: #2a2b3d;
-}
+.folder-node:hover { background: var(--surface-raised); }
+.folder-node.active { background: var(--accent-bg); }
 
 .folder-node__chevron {
   background: none;
   border: none;
-  color: #585b70;
+  color: var(--text-muted);
   cursor: pointer;
-  font-size: 0.65rem;
+  flex-shrink: 0;
+  font-size: 0.6rem;
   line-height: 1;
   padding: 0;
+  transition: color var(--ease);
   width: 14px;
-  flex-shrink: 0;
 }
+
+.folder-node:hover .folder-node__chevron { color: var(--text-2); }
 
 .folder-node__icon {
   flex-shrink: 0;
-  font-size: 0.85rem;
+  font-size: 0.82rem;
 }
 
 .folder-node__name {
-  color: #cdd6f4;
+  color: var(--text-2);
   flex: 1;
-  font-size: 0.85rem;
+  font-size: var(--text-base);
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 
+.folder-node.active .folder-node__name { color: var(--accent); font-weight: 500; }
+
 .folder-node__rename {
-  background: #313244;
-  border: 1px solid #89b4fa;
-  border-radius: 4px;
-  color: #cdd6f4;
+  background: var(--bg);
+  border: 1px solid var(--accent);
+  border-radius: var(--radius-sm);
+  color: var(--text);
   flex: 1;
-  font-size: 0.85rem;
+  font-family: var(--font-ui);
+  font-size: var(--text-base);
   outline: none;
   padding: 1px 6px;
 }
 
 .folder-node__count {
-  color: #45475a;
-  font-size: 0.72rem;
+  color: var(--text-muted);
   flex-shrink: 0;
+  font-size: var(--text-sm);
 }
 
 .folder-node__actions {
@@ -107,26 +109,22 @@
   flex-shrink: 0;
 }
 
-.folder-node:hover .folder-node__actions {
-  display: flex;
-}
+.folder-node:hover .folder-node__actions { display: flex; }
 
 .folder-node__actions button {
   background: none;
   border: none;
-  border-radius: 4px;
-  color: #585b70;
+  border-radius: var(--radius-sm);
+  color: var(--text-muted);
   cursor: pointer;
   font-size: 0.75rem;
-  padding: 1px 4px;
-  transition: color 0.1s, background 0.1s;
+  padding: 2px 4px;
+  transition: background var(--ease), color var(--ease);
 }
 
 .folder-node__actions button:hover {
-  background: #313244;
-  color: #cdd6f4;
+  background: var(--border-faint);
+  color: var(--text);
 }
 
-.folder-node__actions button:last-child:hover {
-  color: #f38ba8;
-}
+.folder-node__actions button:last-child:hover { color: var(--warm); }
