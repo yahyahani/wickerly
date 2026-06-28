@@ -166,6 +166,62 @@ body { background: var(--bg); color: var(--text); }
 
 .panel-search::placeholder { color: var(--text-ghost); }
 
+/* ── Sort selector ───────────────────────────────────────────────────────── */
+
+.panel-sort {
+  appearance: none;
+  background: var(--glass-bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  color: var(--text-muted);
+  cursor: pointer;
+  font-family: var(--font-ui);
+  font-size: var(--text-xs);
+  outline: none;
+  padding: 4px 8px;
+  transition: border-color var(--ease), color var(--ease);
+  width: 100%;
+}
+
+.panel-sort:focus,
+.panel-sort:hover { border-color: var(--accent); color: var(--text-2); }
+
+/* ── Archive toggle row ──────────────────────────────────────────────────── */
+
+.archive-row {
+  align-items: center;
+  background: none;
+  border: none;
+  border-top: 1px solid var(--border-faint);
+  color: var(--text-muted);
+  cursor: pointer;
+  display: flex;
+  font-family: var(--font-ui);
+  font-size: var(--text-base);
+  gap: var(--sp-2);
+  padding: var(--sp-2) var(--sp-3) var(--sp-2) 22px;
+  text-align: left;
+  transition: background var(--ease), color var(--ease);
+  width: 100%;
+}
+
+.archive-row:hover {
+  background: linear-gradient(180deg, var(--glass-shine) 0%, var(--surface-raised) 100%);
+  color: var(--text);
+}
+
+.archive-row.active {
+  background: linear-gradient(180deg, rgba(255,255,255,0.06) 0%, var(--accent-bg) 100%);
+  color: var(--accent);
+}
+
+.archive-row__label { flex: 1; }
+
+.archive-row__count {
+  color: var(--text-muted);
+  font-size: var(--text-sm);
+}
+
 /* ── Note-editor inline overrides (folder select + controls) ───────────── */
 
 .note-editor__controls {
