@@ -1,0 +1,38 @@
+.sidebar {
+  align-items: center;
+  background: #11111b;
+  border-right: 1px solid #1e1e2e;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 12px 0;
+  width: 52px;
+  flex-shrink: 0;
+}
+
+.sidebar__logo {
+  color: #cba6f7;
+  font-size: 1.4rem;
+  font-weight: 900;
+  margin-bottom: 12px;
+  user-select: none;
+}
+
+.sidebar__btn {
+  background: none;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 1.2rem;
+  height: 40px;
+  transition: background 0.15s;
+  width: 40px;
+}
+
+.sidebar__btn:hover {
+  background: #1e1e2e;
+}
+
+.sidebar__btn.active {
+  background: #313244;
+}
