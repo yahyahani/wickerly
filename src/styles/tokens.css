@@ -35,6 +35,11 @@
   /* ── Motion ─────────────────────────────────────────────────────────── */
   --ease: 180ms ease;
 
+  /* ── Blur levels ─────────────────────────────────────────────────────── */
+  --blur-sm:  blur(8px);
+  --blur-md:  blur(14px);
+  --blur-lg:  blur(22px);
+
   /* ══════════════════════════════════════════════════════════════════════
      LIGHT MODE (default)
   ══════════════════════════════════════════════════════════════════════ */
@@ -66,6 +71,21 @@
   /* Scrollbar (webkit) */
   --scrollbar-thumb: #C5BAA8;
   --scrollbar-track: transparent;
+
+  /* ── Glass surfaces ──────────────────────────────────────────────────── */
+  --glass-sidebar:  rgba(225, 218, 204, 0.82);   /* sidebar bg — translucent */
+  --glass-panel:    rgba(238, 232, 220, 0.74);   /* left panel bg */
+  --glass-bg:       rgba(244, 239, 230, 0.70);   /* dashboard sections */
+  --glass-raised:   rgba(255, 252, 246, 0.90);   /* elevated — palette, cards */
+  --glass-stroke:   rgba(255, 255, 255, 0.58);   /* bright top/left edge highlight */
+  --glass-shine:    rgba(255, 255, 255, 0.13);   /* inner gradient top stop */
+
+  /* ── Shadow scale ────────────────────────────────────────────────────── */
+  --shadow-xs: 0 1px 3px rgba(28,22,16,0.07);
+  --shadow-sm: 0 2px 8px rgba(28,22,16,0.08), 0 1px 2px rgba(28,22,16,0.05);
+  --shadow-md: 0 4px 16px rgba(28,22,16,0.10), 0 2px 4px rgba(28,22,16,0.06);
+  --shadow-lg: 0 8px 32px rgba(28,22,16,0.14), 0 4px 8px rgba(28,22,16,0.08);
+  --shadow-xl: 0 20px 64px rgba(28,22,16,0.22), 0 8px 24px rgba(28,22,16,0.14), 0 2px 6px rgba(28,22,16,0.07);
 }
 
 /* ══════════════════════════════════════════════════════════════════════
@@ -99,6 +119,21 @@
   /* Scrollbar */
   --scrollbar-thumb: #3E3228;
   --scrollbar-track: transparent;
+
+  /* Glass surfaces (dark — deeper, less transparent) */
+  --glass-sidebar:  rgba(18, 14, 10, 0.88);
+  --glass-panel:    rgba(24, 19, 14, 0.80);
+  --glass-bg:       rgba(30, 24, 18, 0.76);
+  --glass-raised:   rgba(44, 35, 24, 0.92);
+  --glass-stroke:   rgba(255, 255, 255, 0.07);
+  --glass-shine:    rgba(255, 255, 255, 0.05);
+
+  /* Shadow scale (dark — heavier) */
+  --shadow-xs: 0 1px 3px rgba(0,0,0,0.28);
+  --shadow-sm: 0 2px 8px rgba(0,0,0,0.34), 0 1px 2px rgba(0,0,0,0.22);
+  --shadow-md: 0 4px 16px rgba(0,0,0,0.40), 0 2px 4px rgba(0,0,0,0.24);
+  --shadow-lg: 0 8px 32px rgba(0,0,0,0.52), 0 4px 8px rgba(0,0,0,0.30);
+  --shadow-xl: 0 20px 64px rgba(0,0,0,0.68), 0 8px 24px rgba(0,0,0,0.44), 0 2px 6px rgba(0,0,0,0.28);
 }
 
 /* ── Global scrollbar styling ─────────────────────────────────────────── */
