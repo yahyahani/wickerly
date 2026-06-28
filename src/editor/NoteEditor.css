@@ -134,3 +134,67 @@
   border-top: 1px solid var(--border);
   margin: 1.8em 0;
 }
+
+/* ── Word count strip ────────────────────────────────────────────────────── */
+
+.note-editor__wordcount {
+  color: var(--text-ghost);
+  font-size: var(--text-xs);
+  letter-spacing: 0.02em;
+  margin-top: var(--sp-1);
+}
+
+/* ── Icon button group (pin / archive / export) ──────────────────────────── */
+
+.note-editor__icon-group {
+  align-items: center;
+  border-left: 1px solid var(--border-faint);
+  display: flex;
+  gap: 2px;
+  padding-left: var(--sp-2);
+}
+
+.note-editor__icon-btn {
+  align-items: center;
+  background: none;
+  border: none;
+  border-radius: var(--radius-sm);
+  color: var(--text-muted);
+  cursor: pointer;
+  display: flex;
+  padding: 4px 5px;
+  transition: background var(--ease), color var(--ease);
+}
+
+.note-editor__icon-btn:hover {
+  background: var(--surface-raised);
+  color: var(--text);
+}
+
+.note-editor__icon-btn.active { color: var(--accent); }
+
+/* ── [[note-links]] in preview ───────────────────────────────────────────── */
+
+.markdown-preview .note-link {
+  background: var(--accent-bg);
+  border-radius: var(--radius-sm);
+  color: var(--accent);
+  cursor: pointer;
+  padding: 1px 5px;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  transition: background var(--ease);
+}
+
+.markdown-preview .note-link:hover {
+  background: color-mix(in srgb, var(--accent-bg) 60%, var(--accent) 40%);
+}
+
+.markdown-preview .note-link--broken {
+  background: var(--warm-bg);
+  border-radius: var(--radius-sm);
+  color: var(--text-muted);
+  cursor: default;
+  padding: 1px 5px;
+  text-decoration: line-through;
+}
