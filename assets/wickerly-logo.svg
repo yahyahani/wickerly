@@ -1,0 +1,28 @@
+<svg width="680" height="240" viewBox="0 0 680 240" xmlns="http://www.w3.org/2000/svg" role="img">
+<title>Wickerly logo</title>
+<desc>Een logomark van drie vervlochten lijnen die samenkomen in een knoop, met de wordmark "Wickerly" ernaast.</desc>
+<defs>
+<linearGradient id="strandA" x1="0" y1="0" x2="1" y2="1">
+<stop offset="0%" stop-color="#3b7a6a"/>
+<stop offset="100%" stop-color="#2f6356"/>
+</linearGradient>
+<linearGradient id="strandB" x1="0" y1="0" x2="1" y2="1">
+<stop offset="0%" stop-color="#5c9c87"/>
+<stop offset="100%" stop-color="#4a8674"/>
+</linearGradient>
+<linearGradient id="strandC" x1="0" y1="0" x2="1" y2="1">
+<stop offset="0%" stop-color="#8fc3b0"/>
+<stop offset="100%" stop-color="#74af99"/>
+</linearGradient>
+</defs>
+
+<g transform="translate(40,20)">
+<path d="M20 130 C 60 60, 100 60, 140 130 C 100 200, 60 200, 20 130" fill="none" stroke="url(#strandA)" stroke-width="11" stroke-linecap="round"/>
+<path d="M140 130 C 100 60, 60 60, 20 130 C 60 200, 100 200, 140 130" fill="none" stroke="url(#strandB)" stroke-width="11" stroke-linecap="round" opacity="0.92"/>
+<path d="M80 10 C 80 70, 30 90, 80 130 C 130 90, 80 70, 80 10" fill="none" stroke="url(#strandC)" stroke-width="9" stroke-linecap="round" opacity="0.85" transform="translate(0,40) scale(1,1.05)"/>
+<circle cx="80" cy="130" r="6.5" fill="#2f6356"/>
+</g>
+
+<text x="230" y="165" font-family="Helvetica, Arial, sans-serif" font-size="64" font-weight="500" fill="#1a1a1a">Wickerly</text>
+<text x="232" y="195" font-family="Helvetica, Arial, sans-serif" font-size="15" fill="#666666">lokale notities, vervlochten</text>
+</svg>
