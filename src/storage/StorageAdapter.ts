@@ -6,6 +6,7 @@ import type {
   FolderCreateInput,
   FolderUpdateInput,
 } from './types';
+import type { LWWDoc } from '../crdt';
 
 /**
  * StorageAdapter — the single seam between the app and its persistence layer.
@@ -34,4 +35,11 @@ export interface StorageAdapter {
   createFolder(input: FolderCreateInput): Promise<Folder>;
   updateFolder(id: string, input: FolderUpdateInput): Promise<Folder>;
   deleteFolder(id: string): Promise<void>;
+
+  // ── CRDT sync surface ──────────────────────────────────────────────────────
+  // The UI never calls these; they are the contract for the sync transport layer.
+  getPeerId(): Promise<string>;
+  getCRDTDoc(noteId: string): Promise<LWWDoc | undefined>;
+  getAllCRDTDocs(): Promise<LWWDoc[]>;
+  applyRemoteDoc(incoming: LWWDoc): Promise<Note>;
 }
