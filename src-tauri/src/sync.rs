@@ -1,4 +1,4 @@
-use std::{net::UdpSocket, sync::Arc};
+use std::{net::UdpSocket, sync::Arc, time::Duration};
 
 use axum::{
     extract::{Json, State},
@@ -46,7 +46,10 @@ impl SyncState {
         Self {
             session: Mutex::new(None),
             mdns:    Mutex::new(None),
-            client:  Client::new(),
+            client:  Client::builder()
+                .timeout(Duration::from_secs(5))
+                .build()
+                .expect("failed to build HTTP client"),
         }
     }
 }
@@ -162,28 +165,42 @@ fn start_mdns(
     let my_safe_id = safe_id.clone();
     tokio::spawn(async move {
         while let Ok(event) = browser.recv_async().await {
-            if let ServiceEvent::ServiceResolved(info) = event {
-                // Extract the instance name (everything before ._wickerly._tcp.local.)
-                let fullname = info.get_fullname();
-                let remote_id = fullname
-                    .split("._wickerly._tcp.local.")
-                    .next()
-                    .unwrap_or("")
-                    .to_string();
+            match event {
+                ServiceEvent::ServiceResolved(info) => {
+                    let fullname = info.get_fullname();
+                    let remote_id = fullname
+                        .split("._wickerly._tcp.local.")
+                        .next()
+                        .unwrap_or("")
+                        .to_string();
 
-                if remote_id.is_empty() || remote_id == my_safe_id {
-                    continue;
-                }
+                    if remote_id.is_empty() || remote_id == my_safe_id {
+                        continue;
+                    }
 
-                if let Some(addr) = info.get_addresses().iter().next() {
-                    let base_url = format!("http://{}:{}", addr, info.get_port());
-                    let peer = PeerInfo { peer_id: remote_id.clone(), base_url };
-
-                    let mut list = peers.write().await;
-                    if !list.iter().any(|p| p.peer_id == remote_id) {
-                        list.push(peer);
+                    if let Some(addr) = info.get_addresses().iter().next() {
+                        let base_url = format!("http://{}:{}", addr, info.get_port());
+                        let mut list = peers.write().await;
+                        if let Some(existing) = list.iter_mut().find(|p| p.peer_id == remote_id) {
+                            // Peer restarted with a new port — update in place
+                            existing.base_url = base_url;
+                        } else {
+                            list.push(PeerInfo { peer_id: remote_id, base_url });
+                        }
                     }
                 }
+                ServiceEvent::ServiceRemoved(_, fullname) => {
+                    let remote_id = fullname
+                        .split("._wickerly._tcp.local.")
+                        .next()
+                        .unwrap_or("")
+                        .to_string();
+
+                    if !remote_id.is_empty() && remote_id != my_safe_id {
+                        peers.write().await.retain(|p| p.peer_id != remote_id);
+                    }
+                }
+                _ => {}
             }
         }
     });
