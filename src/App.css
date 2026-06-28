@@ -40,19 +40,28 @@ body { background: var(--bg); color: var(--text); }
 .app__empty p { font-size: var(--text-base); }
 
 .app__empty-btn {
+  align-items: center;
   background: var(--accent);
-  border: none;
+  background-image: linear-gradient(180deg, rgba(255,255,255,0.18) 0%, rgba(0,0,0,0.06) 100%);
+  border: 1px solid var(--accent-hover);
   border-radius: var(--radius);
+  box-shadow: var(--shadow-sm), inset 0 1px 0 rgba(255,255,255,0.28);
   color: var(--accent-text);
   cursor: pointer;
+  display: inline-flex;
   font-family: var(--font-ui);
   font-size: var(--text-base);
   font-weight: 500;
   padding: 9px 20px;
-  transition: background var(--ease);
+  transition: background var(--ease), box-shadow var(--ease), transform var(--ease);
 }
 
-.app__empty-btn:hover { background: var(--accent-hover); }
+.app__empty-btn:hover {
+  background: var(--accent-hover);
+  background-image: linear-gradient(180deg, rgba(255,255,255,0.18) 0%, rgba(0,0,0,0.08) 100%);
+  box-shadow: var(--shadow-md), inset 0 1px 0 rgba(255,255,255,0.28);
+  transform: translateY(-1px);
+}
 
 .app-loading {
   align-items: center;
@@ -68,13 +77,17 @@ body { background: var(--bg); color: var(--text); }
 /* ── Left panel ─────────────────────────────────────────────────────────── */
 
 .left-panel {
-  background: var(--surface);
+  backdrop-filter: var(--blur-sm);
+  -webkit-backdrop-filter: var(--blur-sm);
+  background: linear-gradient(160deg, var(--glass-raised) 0%, var(--glass-panel) 100%);
   border-right: 1px solid var(--border);
+  box-shadow: var(--shadow-sm), inset -1px 0 0 var(--glass-stroke);
   display: flex;
   flex-direction: column;
+  flex-shrink: 0;
   overflow: hidden;
   width: 272px;
-  flex-shrink: 0;
+  z-index: 9;
 }
 
 .panel-toolbar {
@@ -87,35 +100,70 @@ body { background: var(--bg); color: var(--text); }
 }
 
 .panel-new-btn {
+  align-items: center;
   background: var(--accent);
-  border: none;
+  background-image: linear-gradient(180deg, rgba(255,255,255,0.18) 0%, rgba(0,0,0,0.06) 100%);
+  border: 1px solid var(--accent-hover);
   border-radius: var(--radius);
+  box-shadow: var(--shadow-sm), inset 0 1px 0 rgba(255,255,255,0.28);
   color: var(--accent-text);
   cursor: pointer;
+  display: flex;
   font-family: var(--font-ui);
   font-size: var(--text-sm);
   font-weight: 500;
+  gap: var(--sp-2);
   padding: 7px var(--sp-3);
   text-align: left;
-  transition: background var(--ease);
+  transition: background var(--ease), box-shadow var(--ease), transform var(--ease);
 }
 
-.panel-new-btn:hover { background: var(--accent-hover); }
+.panel-new-btn:hover {
+  background: var(--accent-hover);
+  background-image: linear-gradient(180deg, rgba(255,255,255,0.20) 0%, rgba(0,0,0,0.08) 100%);
+  box-shadow: var(--shadow-md), inset 0 1px 0 rgba(255,255,255,0.28);
+  transform: translateY(-1px);
+}
 
-.panel-search {
-  background: var(--bg);
+.panel-new-btn:active { transform: translateY(0); }
+
+/* ── Search field with icon ─────────────────────────────────────────────── */
+
+.panel-search-wrap {
+  align-items: center;
+  background: var(--glass-bg);
+  backdrop-filter: var(--blur-sm);
+  -webkit-backdrop-filter: var(--blur-sm);
   border: 1px solid var(--border);
   border-radius: var(--radius);
+  box-shadow: inset 0 1px 3px rgba(28,22,16,0.06);
+  display: flex;
+  gap: var(--sp-2);
+  padding: 5px 10px;
+  transition: border-color var(--ease), box-shadow var(--ease);
+}
+
+.panel-search-wrap:focus-within {
+  border-color: var(--accent);
+  box-shadow: inset 0 1px 3px rgba(28,22,16,0.06), 0 0 0 2px var(--accent-bg);
+}
+
+.panel-search-icon {
+  color: var(--text-muted);
+  flex-shrink: 0;
+}
+
+.panel-search {
+  background: none;
+  border: none;
   color: var(--text);
+  flex: 1;
   font-family: var(--font-ui);
   font-size: var(--text-sm);
   outline: none;
-  padding: 6px 10px;
-  transition: border-color var(--ease);
   width: 100%;
 }
 
-.panel-search:focus { border-color: var(--accent); }
 .panel-search::placeholder { color: var(--text-ghost); }
 
 /* ── Note-editor inline overrides (folder select + controls) ───────────── */
