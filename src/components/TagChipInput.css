@@ -1,0 +1,58 @@
+.tag-chip-input {
+  align-items: center;
+  background: #181825;
+  border: 1px solid #313244;
+  border-radius: 6px;
+  cursor: text;
+  display: flex;
+  flex-wrap: wrap;
+  flex: 1;
+  gap: 4px;
+  min-height: 30px;
+  padding: 3px 8px;
+  transition: border-color 0.15s;
+}
+
+.tag-chip-input:focus-within {
+  border-color: #585b70;
+}
+
+.tag-chip-input__chip {
+  align-items: center;
+  background: #313244;
+  border-radius: 12px;
+  color: #cba6f7;
+  display: flex;
+  font-size: 0.75rem;
+  gap: 4px;
+  padding: 1px 8px 1px 10px;
+}
+
+.tag-chip-input__remove {
+  background: none;
+  border: none;
+  color: #7f849c;
+  cursor: pointer;
+  font-size: 0.9rem;
+  line-height: 1;
+  padding: 0;
+  transition: color 0.1s;
+}
+
+.tag-chip-input__remove:hover {
+  color: #f38ba8;
+}
+
+.tag-chip-input__input {
+  background: none;
+  border: none;
+  color: #cdd6f4;
+  font-size: 0.78rem;
+  min-width: 60px;
+  outline: none;
+  padding: 1px 0;
+}
+
+.tag-chip-input__input::placeholder {
+  color: #45475a;
+}
