@@ -9,10 +9,12 @@ export class WickerlyDB extends Dexie {
     super('wickerly');
 
     this.version(1).stores({
-      // Only indexed fields go here. 'id' is the primary key (++id for auto,
-      // 'id' for manual). We index updatedAt for dashboard queries and tags
-      // for tag-cloud lookups.
       notes: 'id, folderId, updatedAt, createdAt, *tags',
+      folders: 'id, parentId, updatedAt',
+    });
+
+    this.version(2).stores({
+      notes: 'id, folderId, updatedAt, createdAt, pinned, archived, *tags',
       folders: 'id, parentId, updatedAt',
     });
   }

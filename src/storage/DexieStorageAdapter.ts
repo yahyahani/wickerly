@@ -27,6 +27,8 @@ export class DexieStorageAdapter implements StorageAdapter {
   async createNote(input: NoteCreateInput): Promise<Note> {
     const now = Date.now();
     const note: Note = {
+      pinned: false,
+      archived: false,
       ...input,
       id: newId(),
       createdAt: now,

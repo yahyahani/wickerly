@@ -4,6 +4,8 @@ export interface Note {
   content: string;       // raw markdown
   tags: string[];
   folderId: string | null;
+  pinned?: boolean;      // undefined → false; pinned notes appear at top of list
+  archived?: boolean;    // undefined → false; archived notes hidden from main view
   createdAt: number;     // unix ms
   updatedAt: number;     // unix ms
 }
