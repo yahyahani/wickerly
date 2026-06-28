@@ -2,13 +2,13 @@
   display: flex;
   flex-direction: column;
   height: 100%;
-  background: #1e1e2e;
-  color: #cdd6f4;
+  background: var(--bg);
+  color: var(--text);
 }
 
 .note-editor__header {
-  padding: 16px 20px 12px;
-  border-bottom: 1px solid #313244;
+  padding: var(--sp-5) var(--sp-6) var(--sp-3);
+  border-bottom: 1px solid var(--border-faint);
   flex-shrink: 0;
 }
 
@@ -16,59 +16,70 @@
   width: 100%;
   background: transparent;
   border: none;
-  color: #cdd6f4;
-  font-size: 1.5rem;
+  color: var(--text);
+  font-family: var(--font-ui);
+  font-size: var(--text-xl);
   font-weight: 600;
+  letter-spacing: -0.01em;
   outline: none;
-  margin-bottom: 8px;
+  margin-bottom: var(--sp-3);
 }
 
-.note-editor__title::placeholder {
-  color: #585b70;
-}
+.note-editor__title::placeholder { color: var(--text-ghost); }
 
 .note-editor__meta {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: var(--sp-2);
 }
 
 .note-editor__preview-btn {
-  background: #313244;
-  border: none;
-  border-radius: 6px;
-  color: #cdd6f4;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  color: var(--text-2);
   cursor: pointer;
-  font-size: 0.8rem;
-  padding: 4px 12px;
-  transition: background 0.15s;
+  font-family: var(--font-ui);
+  font-size: var(--text-sm);
+  padding: 3px 12px;
+  transition: background var(--ease), color var(--ease), border-color var(--ease);
+  white-space: nowrap;
 }
 
-.note-editor__preview-btn:hover,
+.note-editor__preview-btn:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
 .note-editor__preview-btn.active {
-  background: #89b4fa;
-  color: #1e1e2e;
+  background: var(--accent-bg);
+  border-color: var(--accent);
+  color: var(--accent);
 }
 
 .note-editor__saving {
-  color: #a6adc8;
-  font-size: 0.75rem;
+  color: var(--text-muted);
+  font-size: var(--text-sm);
+  white-space: nowrap;
 }
 
 .note-editor__body {
   flex: 1;
   overflow: hidden;
+  background: var(--bg);
 }
 
-/* ── Markdown preview styles ──────────────────────────────────────────────── */
+/* ── Markdown preview ────────────────────────────────────────────────────── */
 
 .markdown-preview {
-  padding: 20px 24px;
-  color: #cdd6f4;
-  font-size: 15px;
-  line-height: 1.7;
+  padding: var(--sp-6) 32px;
+  color: var(--text);
+  font-family: var(--font-ui);
+  font-size: 15.5px;
+  line-height: 1.75;
   overflow-y: auto;
   height: 100%;
+  max-width: 720px;
 }
 
 .markdown-preview h1,
@@ -77,45 +88,49 @@
 .markdown-preview h4,
 .markdown-preview h5,
 .markdown-preview h6 {
-  color: #cba6f7;
-  margin: 1.2em 0 0.4em;
+  color: var(--text);
+  font-weight: 650;
+  letter-spacing: -0.01em;
+  margin: 1.4em 0 0.4em;
 }
 
-.markdown-preview h1 { font-size: 1.8rem; }
-.markdown-preview h2 { font-size: 1.4rem; }
-.markdown-preview h3 { font-size: 1.2rem; }
+.markdown-preview h1 { font-size: 1.75rem; }
+.markdown-preview h2 { font-size: 1.35rem; }
+.markdown-preview h3 { font-size: 1.1rem; }
 
-.markdown-preview p { margin: 0.6em 0; }
-.markdown-preview strong { color: #f38ba8; }
-.markdown-preview em { color: #fab387; }
+.markdown-preview p  { margin: 0.6em 0; }
+
+.markdown-preview strong { color: var(--text); font-weight: 700; }
+.markdown-preview em     { color: var(--text-2); }
 
 .markdown-preview code {
-  background: #313244;
-  border-radius: 4px;
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 0.85em;
+  background: var(--surface);
+  border: 1px solid var(--border-faint);
+  border-radius: var(--radius-sm);
+  color: var(--warm);
+  font-family: var(--font-mono);
+  font-size: 0.84em;
   padding: 2px 6px;
 }
 
 .markdown-preview blockquote {
-  border-left: 3px solid #89b4fa;
-  color: #a6adc8;
-  margin: 0.8em 0;
+  border-left: 3px solid var(--accent);
+  color: var(--text-2);
+  margin: 0.9em 0;
   padding: 4px 16px;
 }
 
-.markdown-preview a {
-  color: #89b4fa;
-}
+.markdown-preview a { color: var(--accent); }
+.markdown-preview a:hover { color: var(--accent-hover); }
 
 .markdown-preview li {
-  margin: 0.2em 0;
-  margin-left: 1.2em;
   list-style: disc;
+  margin: 0.25em 0;
+  margin-left: 1.4em;
 }
 
 .markdown-preview hr {
   border: none;
-  border-top: 1px solid #313244;
-  margin: 1.5em 0;
+  border-top: 1px solid var(--border);
+  margin: 1.8em 0;
 }

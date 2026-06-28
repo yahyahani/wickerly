@@ -3,6 +3,8 @@ import { markdown, markdownLanguage } from '@codemirror/lang-markdown';
 import { languages } from '@codemirror/language-data';
 import { oneDark } from '@codemirror/theme-one-dark';
 import { EditorView } from '@codemirror/view';
+import { useTheme } from '../hooks/useTheme';
+import { warmLightTheme } from './warmLightTheme';
 
 interface Props {
   value: string;
@@ -10,17 +12,24 @@ interface Props {
   readOnly?: boolean;
 }
 
-const baseTheme = EditorView.theme({
+const sharedExtensions = [
+  markdown({ base: markdownLanguage, codeLanguages: languages }),
+  EditorView.lineWrapping,
+];
+
+// Dark-mode base overrides that complement oneDark
+const darkBase = EditorView.theme({
   '&': { height: '100%', fontSize: '14px' },
-  '.cm-scroller': { overflow: 'auto', fontFamily: "'JetBrains Mono', 'Fira Code', monospace" },
+  '.cm-scroller': { overflow: 'auto', fontFamily: 'var(--font-mono)' },
   '.cm-content': { padding: '12px 16px' },
 });
 
 export function MarkdownEditor({ value, onChange, readOnly = false }: Props) {
+  const { theme } = useTheme();
+
   const extensions = [
-    markdown({ base: markdownLanguage, codeLanguages: languages }),
-    baseTheme,
-    EditorView.lineWrapping,
+    ...sharedExtensions,
+    ...(theme === 'dark' ? [darkBase] : []),
     ...(readOnly ? [EditorView.editable.of(false)] : []),
   ];
 
@@ -28,7 +37,7 @@ export function MarkdownEditor({ value, onChange, readOnly = false }: Props) {
     <CodeMirror
       value={value}
       extensions={extensions}
-      theme={oneDark}
+      theme={theme === 'dark' ? oneDark : warmLightTheme}
       onChange={onChange}
       style={{ height: '100%' }}
       basicSetup={{
