@@ -95,15 +95,22 @@
 }
 
 .sidebar__sync-dot {
+  animation: sync-pulse 2.4s ease-in-out infinite;
   background: var(--text-muted);
   border-radius: 50%;
   height: 7px;
-  opacity: 0.35;
+  opacity: 0.65;
   transition: background var(--ease), box-shadow var(--ease), opacity var(--ease);
   width: 7px;
 }
 
+@keyframes sync-pulse {
+  0%, 100% { opacity: 0.65; }
+  50%       { opacity: 0.25; }
+}
+
 .sidebar__sync-dot.connected {
+  animation: none;
   background: #4caf7d;
   box-shadow: 0 0 6px rgba(76, 175, 125, 0.55);
   opacity: 1;
