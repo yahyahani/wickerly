@@ -114,6 +114,27 @@ async fn start_http_server(
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
+// mDNS peer-list helpers (extracted for testability)
+// ─────────────────────────────────────────────────────────────────────────────
+
+fn peer_id_from_fullname(fullname: &str) -> &str {
+    fullname.split("._wickerly._tcp.local.").next().unwrap_or("")
+}
+
+async fn upsert_peer(peers: &Arc<RwLock<Vec<PeerInfo>>>, peer_id: String, base_url: String) {
+    let mut list = peers.write().await;
+    if let Some(existing) = list.iter_mut().find(|p| p.peer_id == peer_id) {
+        existing.base_url = base_url;
+    } else {
+        list.push(PeerInfo { peer_id, base_url });
+    }
+}
+
+async fn remove_peer(peers: &Arc<RwLock<Vec<PeerInfo>>>, peer_id: &str) {
+    peers.write().await.retain(|p| p.peer_id != peer_id);
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
 // mDNS
 // ─────────────────────────────────────────────────────────────────────────────
 
@@ -167,37 +188,17 @@ fn start_mdns(
         while let Ok(event) = browser.recv_async().await {
             match event {
                 ServiceEvent::ServiceResolved(info) => {
-                    let fullname = info.get_fullname();
-                    let remote_id = fullname
-                        .split("._wickerly._tcp.local.")
-                        .next()
-                        .unwrap_or("")
-                        .to_string();
-
-                    if remote_id.is_empty() || remote_id == my_safe_id {
-                        continue;
-                    }
-
+                    let remote_id = peer_id_from_fullname(info.get_fullname()).to_string();
+                    if remote_id.is_empty() || remote_id == my_safe_id { continue; }
                     if let Some(addr) = info.get_addresses().iter().next() {
                         let base_url = format!("http://{}:{}", addr, info.get_port());
-                        let mut list = peers.write().await;
-                        if let Some(existing) = list.iter_mut().find(|p| p.peer_id == remote_id) {
-                            // Peer restarted with a new port — update in place
-                            existing.base_url = base_url;
-                        } else {
-                            list.push(PeerInfo { peer_id: remote_id, base_url });
-                        }
+                        upsert_peer(&peers, remote_id, base_url).await;
                     }
                 }
                 ServiceEvent::ServiceRemoved(_, fullname) => {
-                    let remote_id = fullname
-                        .split("._wickerly._tcp.local.")
-                        .next()
-                        .unwrap_or("")
-                        .to_string();
-
+                    let remote_id = peer_id_from_fullname(&fullname).to_string();
                     if !remote_id.is_empty() && remote_id != my_safe_id {
-                        peers.write().await.retain(|p| p.peer_id != remote_id);
+                        remove_peer(&peers, &remote_id).await;
                     }
                 }
                 _ => {}
@@ -309,4 +310,93 @@ pub async fn sync_push_to_peer(
         .await
         .map_err(|e| e.to_string())?;
     Ok(())
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Tests
+// ─────────────────────────────────────────────────────────────────────────────
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    // ── peer_id_from_fullname ────────────────────────────────────────────────
+
+    #[test]
+    fn peer_id_extracted_from_wellformed_fullname() {
+        assert_eq!(
+            peer_id_from_fullname("abc123._wickerly._tcp.local."),
+            "abc123"
+        );
+    }
+
+    #[test]
+    fn peer_id_from_name_without_suffix_returns_full_string() {
+        // The is_empty() guard in the browse loop rejects this before any mutation
+        assert_eq!(peer_id_from_fullname("not-a-wickerly-service"), "not-a-wickerly-service");
+    }
+
+    // ── Test 1: ServiceRemoved removes the peer immediately ─────────────────
+
+    #[tokio::test]
+    async fn service_removed_drops_peer_from_list() {
+        let peers = Arc::new(RwLock::new(vec![
+            PeerInfo {
+                peer_id:  "peer-A".to_string(),
+                base_url: "http://10.0.0.2:8080".to_string(),
+            },
+        ]));
+
+        // Simulate ServiceRemoved firing for peer-A
+        remove_peer(&peers, "peer-A").await;
+
+        assert!(
+            peers.read().await.is_empty(),
+            "peer-A must be removed after ServiceRemoved"
+        );
+    }
+
+    #[tokio::test]
+    async fn service_removed_for_unknown_peer_is_noop() {
+        let peers = Arc::new(RwLock::new(vec![
+            PeerInfo {
+                peer_id:  "peer-A".to_string(),
+                base_url: "http://10.0.0.2:8080".to_string(),
+            },
+        ]));
+
+        remove_peer(&peers, "peer-Z").await; // not in list
+
+        assert_eq!(
+            peers.read().await.len(), 1,
+            "peer-A must survive when an unknown peer is removed"
+        );
+    }
+
+    // ── Stale-port fix: ServiceResolved updates existing peer in place ───────
+
+    #[tokio::test]
+    async fn service_resolved_updates_port_without_duplicating() {
+        let peers = Arc::new(RwLock::new(vec![
+            PeerInfo {
+                peer_id:  "peer-A".to_string(),
+                base_url: "http://10.0.0.2:1111".to_string(),
+            },
+        ]));
+
+        upsert_peer(&peers, "peer-A".to_string(), "http://10.0.0.2:2222".to_string()).await;
+
+        let list = peers.read().await;
+        assert_eq!(list.len(), 1,                      "no duplicate peer created");
+        assert_eq!(list[0].base_url, "http://10.0.0.2:2222", "port updated in place");
+    }
+
+    #[tokio::test]
+    async fn service_resolved_adds_previously_unknown_peer() {
+        let peers: Arc<RwLock<Vec<PeerInfo>>> = Arc::new(RwLock::new(vec![]));
+
+        upsert_peer(&peers, "peer-B".to_string(), "http://10.0.0.3:3333".to_string()).await;
+
+        assert_eq!(peers.read().await.len(), 1);
+    }
 }
